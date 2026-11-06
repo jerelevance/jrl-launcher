@@ -107,6 +107,22 @@ Folders are shown as directories: `MUSIC/`, with the slash in the accent color a
 | `ocean` | navy · teal · sky |
 | `candy` | cherry · sky · lemon |
 | `forest` | pine · moss · rust |
+| `sakura` | blossom · cherry · white. Light. |
+| `tokyo` | indigo · neon pink · cyan |
+| `desert` | sand · terracotta · sage |
+| `ice` | frost · glacier · navy |
+| `lava` | black · molten orange · yellow |
+| `grape` | purple · lime · peach |
+| `swiss` | red · white · black. Poster. |
+| `matcha` | tea green · cream · roast |
+| `vapor` | lilac · teal · hot pink |
+| `sunset` | tangerine · magenta · violet |
+| `concrete` | grey · light grey · safety orange |
+| `blueprint` | drafting blue · white · navy, highlighter accent |
+| `gameboy` | four greens |
+| `c64` | blue on blue. `READY.` |
+| `coffee` | espresso · crema · orange |
+| `toxic` | black · radioactive green · purple |
 | `acid` | hot pink · cyan · lime. Loud. |
 
 In `jrl`, `field next` / `field N` / `field list` swaps just the home colour: blue+lime, pink+mint, deep green+mint, mint+cobalt, acid+red.
@@ -154,6 +170,7 @@ neofetch · banner · skull · hack TARGET · rm -rf / · logout
 - **`set fx construct`** in root. Every module rebuilds itself block by block with labelled, scanlined proxies.
 - **`neofetch`**, **`fortune`**, **`skull`**, **`invert on`**.
 - **Two characters never settle.** On titles and labels, one or two letters keep flickering after the decode. That's on purpose.
+- **Hold the house** in the bottom-right pager. A white sweep crosses the screen from a random side at a random angle, like the flash in the root login.
 - **Touch the field** on home. It ripples. Leave it alone and it ripples by itself every few seconds.
 
 ## 10. Updates
