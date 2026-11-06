@@ -25,8 +25,8 @@
   color-scheme:dark}
 :root,.mpanel{
   --fsel:oklch(var(--fl) var(--fc) var(--fh));--fg:var(--ink);--sig:var(--acc);
-  --dim:color-mix(in oklch,var(--ink) 66%,transparent);--rule:color-mix(in oklch,var(--ink) 30%,transparent);
-  --panel:color-mix(in oklch,var(--ink) 7%,transparent);--row:color-mix(in oklch,var(--ink) 12%,transparent)}
+  --dim:color-mix(in oklch,var(--ink) 80%,transparent);--rule:color-mix(in oklch,var(--ink) 48%,transparent);
+  --panel:color-mix(in oklch,var(--ink) 9%,transparent);--row:color-mix(in oklch,var(--ink) 17%,transparent)}
 :root[data-field="apps"],.mpanel[data-panel="apps"]{--fl:.69;--fc:.2;--fh:45;--ink:oklch(.2 .03 165);--acc:oklch(.99 0 0);--warn:oklch(.42 .29 266);--onwarn:#fff;--hl:oklch(.45 .29 266);--onhl:#fff}
 :root[data-field="sys"],.mpanel[data-panel="sys"]{--fl:.93;--fc:.21;--fh:115;--ink:oklch(.14 0 0);--acc:oklch(.6 .24 28);--warn:oklch(.6 .24 28);--onwarn:#fff;--hl:oklch(.52 .26 295);--onhl:#fff}
 
@@ -371,6 +371,8 @@ p{margin:0}
 html.asleep *,html.asleep *::before,html.asleep *::after{animation-play-state:paused!important}
 html[data-nobreathe] .giant,html[data-nobreathe] .mhead h2,html[data-nobreathe] .brand,html[data-nobreathe] #boot .bt{animation:none!important}
 html.inv .stage{filter:invert(1) hue-rotate(180deg)}
+html[data-nodots] .stage{background-image:none}
+html[data-nodots] #field,html[data-nodots] .giant-wrap{display:none!important}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition:none!important}}
 </style>
 </head>
@@ -639,30 +641,30 @@ var HOMEPAL = [
 var pal = function (fl, fc, fh, ink, acc, warn, hl, onhl) { return { fl: fl, fc: fc, fh: fh, ink: ink, acc: acc, warn: warn, hl: hl, onhl: onhl }; };
 var THEMES = {
   jrl: { n: 'blue + lime, orange, acid. the original', home: null, apps: null, sys: null },
-  paper: { n: 'light. off-white, cool grey, pale lime',
-    home: pal(.96, .012, 95, 'oklch(.17 0 0)', 'oklch(.6 .23 30)', 'oklch(.6 .23 30)', 'oklch(.5 .24 265)', '#fff'),
-    apps: pal(.9, .025, 250, 'oklch(.2 .02 260)', 'oklch(.48 .26 265)', 'oklch(.6 .23 30)', 'oklch(.6 .23 30)', '#fff'),
-    sys: pal(.94, .07, 120, 'oklch(.18 .02 140)', 'oklch(.55 .2 150)', 'oklch(.58 .23 28)', 'oklch(.5 .22 300)', '#fff') },
+  paper: { n: 'light. white, steel blue, lime',
+    home: pal(.985, .006, 95, 'oklch(.1 0 0)', 'oklch(.58 .25 30)', 'oklch(.58 .25 30)', 'oklch(.45 .27 265)', '#fff'),
+    apps: pal(.88, .04, 250, 'oklch(.12 .03 265)', 'oklch(.42 .28 265)', 'oklch(.58 .25 30)', 'oklch(.58 .25 30)', '#fff'),
+    sys: pal(.93, .14, 122, 'oklch(.12 .02 140)', 'oklch(.45 .2 150)', 'oklch(.55 .25 28)', 'oklch(.42 .25 300)', '#fff') },
   pastel: { n: 'light. pink, mint, lilac',
-    home: pal(.88, .08, 350, 'oklch(.25 .05 350)', 'oklch(.52 .17 160)', 'oklch(.52 .17 160)', 'oklch(.82 .12 170)', 'oklch(.2 0 0)'),
-    apps: pal(.9, .07, 170, 'oklch(.24 .05 200)', 'oklch(.55 .22 340)', 'oklch(.55 .22 340)', 'oklch(.8 .12 340)', 'oklch(.2 0 0)'),
-    sys: pal(.88, .07, 295, 'oklch(.25 .06 290)', 'oklch(.6 .19 40)', 'oklch(.6 .19 40)', 'oklch(.88 .12 95)', 'oklch(.2 0 0)') },
-  bauhaus: { n: 'beige, mustard, red. your wallpaper',
-    home: pal(.82, .04, 75, 'oklch(.16 0 0)', 'oklch(.5 .18 25)', 'oklch(.5 .18 25)', 'oklch(.67 .14 70)', 'oklch(.16 0 0)'),
-    apps: pal(.67, .14, 70, 'oklch(.16 0 0)', 'oklch(.97 .01 90)', 'oklch(.5 .18 25)', 'oklch(.5 .18 25)', '#fff'),
-    sys: pal(.5, .17, 25, 'oklch(.95 .02 80)', 'oklch(.78 .13 75)', 'oklch(.16 0 0)', 'oklch(.82 .04 75)', 'oklch(.16 0 0)') },
+    home: pal(.86, .12, 350, 'oklch(.18 .06 350)', 'oklch(.45 .17 165)', 'oklch(.45 .17 165)', 'oklch(.8 .15 170)', 'oklch(.15 0 0)'),
+    apps: pal(.88, .11, 168, 'oklch(.17 .05 200)', 'oklch(.5 .25 345)', 'oklch(.5 .25 345)', 'oklch(.75 .17 345)', 'oklch(.15 0 0)'),
+    sys: pal(.84, .11, 295, 'oklch(.17 .07 290)', 'oklch(.55 .22 40)', 'oklch(.55 .22 40)', 'oklch(.9 .16 100)', 'oklch(.15 0 0)') },
+  bauhaus: { n: 'cream, mustard, red. your wallpaper',
+    home: pal(.9, .045, 82, 'oklch(.1 0 0)', 'oklch(.52 .21 27)', 'oklch(.52 .21 27)', 'oklch(.72 .16 72)', 'oklch(.1 0 0)'),
+    apps: pal(.72, .16, 72, 'oklch(.1 0 0)', 'oklch(.99 .01 90)', 'oklch(.52 .21 27)', 'oklch(.52 .21 27)', '#fff'),
+    sys: pal(.52, .21, 27, 'oklch(.98 .02 85)', 'oklch(.85 .15 80)', 'oklch(.1 0 0)', 'oklch(.9 .045 82)', 'oklch(.1 0 0)') },
   mono: { n: 'white, grey, black. one red',
-    home: pal(.97, 0, 0, 'oklch(.12 0 0)', 'oklch(.58 .24 28)', 'oklch(.58 .24 28)', 'oklch(.12 0 0)', '#fff'),
-    apps: pal(.86, 0, 0, 'oklch(.12 0 0)', 'oklch(.58 .24 28)', 'oklch(.58 .24 28)', 'oklch(.12 0 0)', '#fff'),
-    sys: pal(.15, 0, 0, 'oklch(.95 0 0)', 'oklch(.66 .24 28)', 'oklch(.66 .24 28)', 'oklch(.95 0 0)', '#111') },
+    home: pal(1, 0, 0, 'oklch(.05 0 0)', 'oklch(.58 .26 28)', 'oklch(.58 .26 28)', 'oklch(.05 0 0)', '#fff'),
+    apps: pal(.8, 0, 0, 'oklch(.05 0 0)', 'oklch(.55 .26 28)', 'oklch(.55 .26 28)', 'oklch(.05 0 0)', '#fff'),
+    sys: pal(.08, 0, 0, 'oklch(.99 0 0)', 'oklch(.66 .26 28)', 'oklch(.66 .26 28)', 'oklch(.99 0 0)', '#000') },
   night: { n: 'dark. graphite, umber, deep green',
-    home: pal(.17, .012, 265, 'oklch(.93 .01 100)', 'oklch(.9 .22 128)', 'oklch(.68 .25 0)', 'oklch(.9 .22 128)', '#111'),
-    apps: pal(.2, .04, 45, 'oklch(.9 .07 60)', 'oklch(.74 .18 45)', 'oklch(.7 .14 220)', 'oklch(.74 .18 45)', '#111'),
-    sys: pal(.19, .035, 165, 'oklch(.9 .1 170)', 'oklch(.85 .15 170)', 'oklch(.68 .27 0)', 'oklch(.72 .19 40)', '#111') },
+    home: pal(.13, .015, 265, 'oklch(.98 .01 100)', 'oklch(.92 .24 128)', 'oklch(.7 .26 0)', 'oklch(.92 .24 128)', '#000'),
+    apps: pal(.16, .05, 45, 'oklch(.97 .06 70)', 'oklch(.78 .2 50)', 'oklch(.75 .15 220)', 'oklch(.78 .2 50)', '#000'),
+    sys: pal(.15, .045, 165, 'oklch(.96 .09 170)', 'oklch(.88 .17 170)', 'oklch(.7 .27 0)', 'oklch(.78 .2 40)', '#000') },
   acid: { n: 'loud. hot pink, cyan, lime',
-    home: pal(.65, .29, 355, 'oklch(.99 0 0)', 'oklch(.93 .23 125)', 'oklch(.16 0 0)', 'oklch(.9 .15 195)', 'oklch(.15 0 0)'),
-    apps: pal(.85, .15, 200, 'oklch(.18 .03 260)', 'oklch(.62 .29 355)', 'oklch(.62 .29 355)', 'oklch(.62 .29 355)', '#fff'),
-    sys: pal(.92, .23, 125, 'oklch(.15 0 0)', 'oklch(.55 .29 300)', 'oklch(.62 .29 355)', 'oklch(.55 .29 300)', '#fff') }
+    home: pal(.6, .3, 355, 'oklch(1 0 0)', 'oklch(.94 .24 125)', 'oklch(.1 0 0)', 'oklch(.92 .16 195)', 'oklch(.1 0 0)'),
+    apps: pal(.86, .16, 200, 'oklch(.1 .03 260)', 'oklch(.58 .3 355)', 'oklch(.58 .3 355)', 'oklch(.58 .3 355)', '#fff'),
+    sys: pal(.93, .24, 125, 'oklch(.08 0 0)', 'oklch(.5 .3 300)', 'oklch(.58 .3 355)', 'oklch(.5 .3 300)', '#fff') }
 };
 var PV = { '--fl': 'fl', '--fc': 'fc', '--fh': 'fh', '--ink': 'ink', '--acc': 'acc', '--warn': 'warn', '--hl': 'hl', '--onhl': 'onhl' };
 function setVars(el, P) { Object.keys(PV).forEach(function (v) { if (P) el.style.setProperty(v, P[PV[v]]); else el.style.removeProperty(v); }); }
@@ -724,11 +726,18 @@ function pixelize(img) {
   var md = mx.getImageData(0, 0, GM, GM).data, mo = document.createElement('canvas'), MS = 162, mcs = MS / GM; mo.width = mo.height = MS; var mox = mo.getContext('2d');
   for (var y = 0; y < GM; y++) for (var z = 0; z < GM; z++) {
     var p = (y * GM + z) * 4; if (md[p + 3] < 90) continue;
-    mox.fillStyle = 'rgb(' + md[p] + ',' + md[p + 1] + ',' + md[p + 2] + ')'; var mcx = z * mcs + mcs / 2, mcy = y * mcs + mcs / 2, rr = mcs * .46;
+    mox.fillStyle = vivid(md[p], md[p + 1], md[p + 2]); var mcx = z * mcs + mcs / 2, mcy = y * mcs + mcs / 2, rr = mcs * .47;
     var edge = (y > 0 && md[p - GM * 4 + 3] < 90) || (z > 0 && md[p - 4 + 3] < 90);
     if (edge || (y + z) % 7 === 0) mox.fillRect(mcx - rr, mcy - rr, rr * 2, rr * 2); else { mox.beginPath(); mox.arc(mcx, mcy, rr, 0, 6.2832); mox.fill(); }
   }
   return { mask: out.toDataURL(), mos: mo.toDataURL() };
+}
+/* mosaic colours: saturate hard and pull lightness into a band that stands off light and dark fields alike */
+function vivid(r, g, b) {
+  r /= 255; g /= 255; b /= 255; var mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, h = 0, s = 0, d = mx - mn;
+  if (d) { s = d / (1 - Math.abs(2 * l - 1)); h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60; if (h < 0) h += 360; }
+  if (s < .12) l = l > .5 ? .97 : .12; else { s = Math.min(1, s * 1.6 + .25); l = Math.max(.42, Math.min(.62, l)); }
+  return 'hsl(' + Math.round(h) + ',' + Math.round(s * 100) + '%,' + Math.round(l * 100) + '%)';
 }
 function iconLoad(a) {
   if (!a.ip) a.ip = new Promise(function (res) {
@@ -1163,9 +1172,10 @@ function fieldSize() {
   FLD.E = new Float32Array(n); FLD.OX = new Float32Array(n); FLD.OY = new Float32Array(n);
 }
 new ResizeObserver(function () { if (FLD.x) fieldSize(); }).observe(stage);
-function fieldStart() { if (asleep || termOpen() || current !== 'home' || !booted) return; if (!FLD.x) fieldSize(); if (FLD.run) return; FLD.run = true; FLD.prev = 0; requestAnimationFrame(fieldLoop); }
+function fieldStart() { if (SET.dots === false || asleep || termOpen() || current !== 'home' || !booted) return; if (!FLD.x) fieldSize(); if (FLD.run) return; FLD.run = true; FLD.prev = 0; requestAnimationFrame(fieldLoop); }
 function fieldStop() { FLD.run = false; }
 function fieldPtr(e, t) {
+  if (SET.ripple === false) return;
   if (current !== 'home' || !FLD.x) return; var p = FLD.ptr;
   if (t === 'up') { p.in = false; return; }
   var r = stage.getBoundingClientRect(); p.x = e.clientX - r.left; p.y = e.clientY - r.top; p.in = true; p.last = performance.now();
@@ -1177,7 +1187,7 @@ function fieldLoop(now) {
   var dt = Math.min(.1, (now - (FLD.prev || now)) / 1000); FLD.prev = now;
   var cols = FLD.cols, rows = FLD.rows, cs = FLD.cs, E = FLD.E, OX = FLD.OX, OY = FLD.OY, offX = FLD.offX, offY = FLD.offY, x = FLD.x, p = FLD.ptr, n = cols * rows; if (!n) return;
   if (now - FLD.colT > 600) { FLD.colT = now; var st = getComputedStyle(R); FLD.ink = st.getPropertyValue('--ink').trim(); FLD.acc = st.getPropertyValue('--acc').trim(); }
-  if (!reduce && !p.in && now - p.last > 5000 && now - FLD.idleT > 7000) { FLD.idleT = now; FLD.waves.push({ x: rnd(0, FLD.w), y: rnd(0, FLD.h), r: 0, s: .55 }); }
+  if (SET.ripple !== false && !reduce && !p.in && now - p.last > 5000 && now - FLD.idleT > 7000) { FLD.idleT = now; FLD.waves.push({ x: rnd(0, FLD.w), y: rnd(0, FLD.h), r: 0, s: .55 }); }
   var maxR = Math.hypot(FLD.w, FLD.h), band = cs * 1.4;
   FLD.waves.forEach(function (w) { w.r += dt * 300; var amp = w.s * (1 - w.r / maxR);
     var j0 = Math.max(0, Math.floor((w.y - w.r - band - offY) / cs)), j1 = Math.min(rows - 1, Math.ceil((w.y + w.r + band - offY) / cs));
@@ -1547,8 +1557,8 @@ var TC = {
     var G2 = [['apps', 'ls · open X · info X · pin X · unpin X · home · recent · hide X · unhide X · hidden · uninstall X · N'],
       ['phone', 'settings [wifi|bt|display|sound|battery|launcher|notif|wallpaper] · shade · notif · battery'],
       ['web', 'web QUERY · url ADDRESS'],
-      ['shell', 'help · clear · history · date · uptime · whoami · echo · fortune · go home|apps|sys · update · version · reboot · exit']];
-    G2.push(isRoot ? ['root', 'theme jrl|paper|pastel|bauhaus|mono|night|acid · set pace fast|normal|slow · set fx|decode|breathe|boot always|smart|off|icons app|mosaic|pixel · field [N|next] · color · chaos on|off · invert on|off · neofetch · banner · hack X · rm -rf / · logout']
+      ['shell', 'calm on|off · help · clear · history · date · uptime · whoami · echo · fortune · go home|apps|sys · update · version · reboot · exit']];
+    G2.push(isRoot ? ['root', 'theme jrl|paper|pastel|bauhaus|mono|night|acid · set pace fast|normal|slow · set dots on|off · set ripple on|off · set fx|decode|breathe|boot always|smart|off|icons app|mosaic|pixel · field [N|next] · color · chaos on|off · invert on|off · neofetch · banner · hack X · rm -rf / · logout']
                    : ['root', "~  (escalate. there's more behind it)"]);
     G2.forEach(function (g) { tline('<span class="ti">' + g[0] + '</span> ' + esc(g[1])); });
   },
@@ -1607,16 +1617,19 @@ var TC = {
     if (k === 'fx') { if (v === 'random' || !v) { SET.fx = ''; saveSet(); return ttxt('fx: random', 'tb'); } if (FXK.indexOf(v) < 0) return terr('fx: ' + FXK.join(' | ') + ' | random'); SET.fx = v; saveSet(); return ttxt('fx locked to ' + v + '. every module switch uses it now.', 'tb'); }
     if (k === 'decode') { var m = { slow: 2, normal: 1, fast: .45 }; if (!m[v]) return terr('decode: slow | normal | fast'); SET.decode = m[v]; saveSet(); return ttxt('decode speed: ' + v, 'tb', { frames: 16 }); }
     if (k === 'breathe') { SET.breathe = v !== 'off'; saveSet(); if (!SET.breathe) R.dataset.nobreathe = '1'; else delete R.dataset.nobreathe; return ttxt('breathing ' + (SET.breathe ? 'resumed.' : 'stopped. holding.'), 'tb'); }
+    if (k === 'dots') { SET.dots = v !== 'off'; saveSet(); if (SET.dots) { delete R.dataset.nodots; fieldStart(); } else { R.dataset.nodots = '1'; fieldStop(); } return ttxt('background dots ' + (SET.dots ? 'on' : 'off'), 'tb'); }
+    if (k === 'ripple') { SET.ripple = v !== 'off'; saveSet(); if (!SET.ripple) FLD.waves = []; return ttxt('tap ripples ' + (SET.ripple ? 'on' : 'off'), 'tb'); }
     if (k === 'pace') { if (['fast', 'normal', 'slow'].indexOf(v) < 0) return terr('pace: fast | normal | slow'); SET.pace = v; saveSet(); PACE = { fast: .5, normal: .75, slow: 1 }[v]; return ttxt('pace: ' + v, 'tb'); }
     if (k === 'boot') { if (['always', 'smart', 'off'].indexOf(v) < 0) return terr('boot: always | smart | off'); SET.boot = v; saveSet(); return ttxt(v === 'smart' ? 'boot plays after a phone restart or an update only' : 'boot: ' + v, 'tb'); }
     if (k === 'icons') { if (['pixel', 'app', 'mosaic'].indexOf(v) < 0) return terr('icons: app | mosaic | pixel'); SET.icons = v; saveSet(); store.set('jrl-iconpick', true); renderGrid(); renderHome(); return ttxt('icons: ' + v, 'tb'); }
-    terr('set: fx | decode | breathe | boot | icons | pace');
+    terr('set: fx | decode | breathe | boot | icons | pace | dots | ripple');
   },
   field: function (a) {
     if (a === 'list' || a === 'ls') return HOMEPAL.forEach(function (P, i) { tline('<span class="tdim">' + pad(i + 1) + '</span>  <span class="sw" style="background:oklch(' + P.fl + ' ' + P.fc + ' ' + P.fh + ')"></span> ' + esc(P.n) + (i === SET.pal ? '  <span class="ti">on</span>' : '')); });
     var n = a && /^\d+$/.test(a) ? parseInt(a, 10) - 1 : (SET.pal + 1) % HOMEPAL.length; if (!HOMEPAL[n]) return terr('field: 1-' + HOMEPAL.length + ' | next | list');
     SET.pal = n; SET.theme = 'jrl'; saveSet(); applyPal(); ttxt('home field ' + pad(n + 1) + ' // ' + HOMEPAL[n].n, 'tb');
   },
+  calm: function (a) { var off = a !== 'off'; SET.dots = SET.ripple = !off; saveSet(); if (off) { R.dataset.nodots = '1'; fieldStop(); } else { delete R.dataset.nodots; fieldStart(); } ttxt(off ? 'calm. no background dots, no ripples. `calm off` to bring them back.' : 'dots and ripples back.', 'tb'); },
   theme: function (a) {
     a = (a || '').toLowerCase();
     if (!a || a === 'list' || a === 'ls') return Object.keys(THEMES).forEach(function (k) { var T = THEMES[k], sw = ['home', 'apps', 'sys'].map(function (m) { var Q = T[m] || (m === 'home' ? HOMEPAL[0] : { apps: { fl: .69, fc: .2, fh: 45 }, sys: { fl: .93, fc: .21, fh: 115 } }[m]); return '<span class="sw" style="background:oklch(' + Q.fl + ' ' + Q.fc + ' ' + Q.fh + ')"></span>'; }).join('');
@@ -1712,6 +1725,7 @@ document.addEventListener('keydown', function (e) {
 /* ---------- start ---------- */
 DEV = API.device() || {}; DEVT = performance.now();
 if (SET.breathe === false) R.dataset.nobreathe = '1';
+if (SET.dots === false) R.dataset.nodots = '1';
 loadApps(); poll(); tick(); renderPager(); applyPal(); refreshSys(); pollAgenda(); pollMedia();
 $('#mname').textContent = modName();
 var bootNow = SET.boot === 'always' || (SET.boot !== 'off' && ((DEV.uptime && DEV.uptime < 600) || store.get('jrl-uiv', '') !== UIV));
