@@ -29,7 +29,7 @@ How to run the JERE//LEVANCE home screen day to day, plus everything hidden in i
 | Hold an app › *Select several* › tap a few › name it › **Make folder** | Folders in one go. |
 | Tap the **agenda** › *Show my calendar* | Your next 7 days on home. Read-only. |
 | **Sys** (swipe right) › Notif › *Grant access* | Badges on apps, plus the now-playing controls. |
-| Type `calm on` in the terminal | If the dots and ripples are too much. |
+| Type `effects` in the terminal | See every effect and toggle it. Dots and ripples start off. |
 
 ## 3. Getting around
 
@@ -81,7 +81,7 @@ Folders are shown as directories: `MUSIC/`, with the slash in the accent color a
 
 ## 7. Looks
 
-**Grid or list.** Tap the ▦ / ≡ button in the find bar, or type `view list` / `view grid`. List view reads like terminal output: plain mono names, no icons, no boxes, `# a` section markers in the drawer, folders as `music/` with a count. When you're picking apps for a folder, rows show `[ ]` and `[x]`. It applies to home, apps and folders.
+**Grid or list.** List is the default. Tap the ▦ / ≡ button in the find bar, or type `view list` / `view grid`. List view reads like terminal output: plain mono names, no icons, no boxes, `# a` section markers in the drawer, folders as `music/` with a count. When you're picking apps for a folder, rows show `[ ]` and `[x]`. It applies to home, apps and folders.
 
 **Icons** (root):
 
@@ -127,7 +127,7 @@ Folders are shown as directories: `MUSIC/`, with the slash in the accent color a
 
 In `jrl`, `field next` / `field N` / `field list` swaps just the home colour: blue+lime, pink+mint, deep green+mint, mint+cobalt, acid+red.
 
-**Quiet it down:** `calm on` removes the dot grid, the home dot field, the giant vertical word, and the tap ripples. `calm off` brings them back. In root, `set dots off` and `set ripple off` control them separately.
+**Effects.** Type `effects` for every effect with its state; tap a line to toggle it. Calm is the default: no dot grid, no home dot field, no tap ripples, no giant dotted word. `calm off` brings them back. Breathing type and the flickering letters stay on. In root, `set dots off` and `set ripple off` control them separately.
 
 **Speed** (root): `set pace fast` is the default. `normal` and `slow` give the transitions more drama.
 
@@ -147,7 +147,7 @@ web QUERY / g Q   search the web                        url ADDRESS
 settings [wifi|bt|display|sound|battery|launcher|notif|wallpaper|location|airplane|dev|storage|data]
 wifi · bt · launcher · shade · notif · battery
 date · uptime · whoami · id · uname · pwd · echo · fortune · history · clear
-go home|apps|sys · calm on|off · update · version · reboot · exit · help
+go home|apps|sys · effects · calm on|off · update · version · reboot · exit · help
 ```
 
 **Root.** Type `~` (or `su`) and sit through the login.

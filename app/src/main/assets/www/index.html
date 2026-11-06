@@ -543,8 +543,9 @@ var pad = function (n) { return String(n).padStart(2, '0'); }, pad3 = function (
 var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
 var store = { get: function (k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
               set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
-var UIV = '0.2';
-var SET = Object.assign({ fx: '', decode: 1, breathe: true, boot: 'smart', icons: 'app', pal: 0, tc: '', labels: true, pace: 'fast', theme: 'jrl' }, store.get('jrl-set', {}));
+var UIV = '0.3';
+var SET = Object.assign({ fx: '', decode: 1, breathe: true, boot: 'smart', icons: 'app', pal: 0, tc: '', labels: true, pace: 'fast', theme: 'jrl', dots: false, ripple: false, view: 'list', chaos: false, x9: false }, store.get('jrl-set', {}));
+if (store.get('jrl-uiv', '') && store.get('jrl-uiv', '') < '0.3') { SET.dots = false; SET.ripple = false; SET.view = 'list'; try { localStorage.setItem('jrl-set', JSON.stringify(SET)); } catch (e) {} }
 if (SET.boot === true) SET.boot = 'smart'; if (SET.boot === false) SET.boot = 'off';
 if (store.get('jrl-uiv', '') !== UIV && SET.icons === 'pixel' && !store.get('jrl-iconpick', false)) SET.icons = 'app';
 function saveSet() { store.set('jrl-set', SET); }
@@ -626,6 +627,7 @@ var GLS = '█▓▒░/\\<>#%01ΔΞ§+*:=', KEEP = [], FX = { chaos: null };
 var gl = function () { return GLS[Math.floor(Math.random() * GLS.length)]; };
 function unkeep(el) { KEEP = KEEP.filter(function (k) { return k.el !== el; }); }
 function keep(el, n, txt) {
+  if (SET.x9 && n) n += 2;
   unkeep(el); txt = txt == null ? el.textContent : txt; if (!n || reduce) return;
   var spots = []; for (var i = 0; i < txt.length; i++) if (/[A-Za-z0-9]/.test(txt[i])) spots.push(i);
   var idx = []; while (spots.length && idx.length < n) idx.push(spots.splice(Math.floor(Math.random() * spots.length), 1)[0]);
@@ -652,7 +654,7 @@ setInterval(function () {
   if (asleep) return;
   KEEP = KEEP.filter(function (k) { return k.el.isConnected && k.el.textContent === k.shown; });
   KEEP.forEach(function (k) {
-    if (Math.random() > .2) return;
+    if (Math.random() > (SET.x9 ? .55 : .2)) return;
     var a = k.txt.split(''); k.idx.forEach(function (i) { a[i] = Math.random() < .35 ? k.txt[i] : gl(); });
     k.el.textContent = k.shown = a.join('');
   });
@@ -1608,6 +1610,7 @@ function bootErr(v) {
   setTimeout(bootPrompt, 380);
 }
 function enterHome() {
+  if (SET.chaos) chaos(true);
   booted = true; syncBars(); fieldStart(); var D = 0;
   if (!reduce) { var p = $('.mpanel.on'); p.style.animation = 'none'; void p.offsetWidth; D = construct(p); }
   decode($('#mname'), modName(), { keep: 1, frames: 14, delay: D }); decode($('#giant'), META[current].g, { keep: 1, frames: 22, speed: 85, delay: D });
@@ -1692,7 +1695,7 @@ function buildTerm() {
     if (term.busy) { if (v.trim()) term.q.push(v.trim()); else term.skip = true; return; }
     var t = v.trim(), first = rows[0];
     tline('<span class="tw">' + esc(promptStr()) + '</span> ' + esc(v)); if (t) { term.hist.push(t); term.hi = term.hist.length; }
-    if (!first || /^\d+$/.test(t)) return trun(t);
+    if (!first || /^\d+$/.test(t) || (isRoot && [3387276748, 1719794217].indexOf(hash(t.toLowerCase().replace(/\s+/g, ' '))) > -1)) return trun(t);
     if (first.app) return execApp(BYKEY.get(first.app));
     trun(first.run);
   });
@@ -1784,7 +1787,7 @@ function chaos(on) {
     var el = pool[Math.floor(Math.random() * pool.length)]; if (!el) return; var st = 'steps(1,end)', j = function (a) { return Math.round((Math.random() - .5) * a) + 'px'; };
     el.animate([{ transform: 'translateX(' + j(30) + ')', clipPath: 'inset(0 0 55% 0)', filter: 'invert(1)', easing: st }, { offset: .3, transform: 'translateX(' + j(16) + ')', clipPath: 'inset(35% 0 0 0)', filter: 'hue-rotate(120deg)', easing: st },
       { offset: .6, transform: 'none', clipPath: 'inset(0 0 0 0)', filter: 'invert(1)', easing: st }, { transform: 'none', clipPath: 'inset(0 0 0 0)', filter: 'none' }], { duration: 360 });
-  }, 1400);
+  }, SET.x9 ? 520 : 1400);
 }
 var FORT = ['every app you will ever install is already shelved somewhere. some of them are better.', 'the newest notification is always the most wrong one.', 'graphic realism: limited materials, unlimited attitude.',
   'if the boot screen asks you to tap, do not tap.', 'there is no dark mode. there is only less light.', 'a home screen is a desk you carry. clear it.', 'the field remembers every touch for about a second.'];
@@ -1795,7 +1798,7 @@ var TC = {
     var G2 = [['apps', 'ls · open X · info X · pin X · unpin X · home · recent · hide X · unhide X · hidden · uninstall X · N'],
       ['phone', 'settings [wifi|bt|display|sound|battery|launcher|notif|wallpaper] · shade · notif · battery'],
       ['web', 'web QUERY · url ADDRESS'],
-      ['shell', 'view list|grid · calm on|off · help · clear · history · date · uptime · whoami · echo · fortune · go home|apps|sys · update · version · reboot · exit']];
+      ['shell', 'effects · view list|grid · calm on|off · help · clear · history · date · uptime · whoami · echo · fortune · go home|apps|sys · update · version · reboot · exit']];
     G2.push(isRoot ? ['root', 'theme list|next|NAME · set pace fast|normal|slow · set dots on|off · set ripple on|off · set fx|decode|breathe|boot always|smart|off|icons app|mosaic|pixel · field [N|next] · color · chaos on|off · invert on|off · neofetch · banner · hack X · rm -rf / · logout']
                    : ['root', "~  (escalate. there's more behind it)"]);
     G2.forEach(function (g) { tline('<span class="ti">' + g[0] + '</span> ' + esc(g[1])); });
@@ -1868,6 +1871,23 @@ var TC = {
     SET.pal = n; SET.theme = 'jrl'; saveSet(); applyPal(); ttxt('home field ' + pad(n + 1) + ' // ' + HOMEPAL[n].n, 'tb');
   },
   view: function (a) { a = (a || '').toLowerCase(); if (a !== 'list' && a !== 'grid') a = SET.view === 'list' ? 'grid' : 'list'; SET.view = a; saveSet(); applyView(); ttxt('view: ' + a, 'tb'); },
+  effects: function () {
+    var on = function (v) { return v ? '<span class="ti">on</span>' : '<span class="tdim">off</span>'; }, row = function (name, state, how, root) {
+      tline('<span class="lk" data-run="' + esc(how) + '">' + name.padEnd(12, ' ') + '</span> ' + state + '  <span class="tdim">' + esc(how) + (root ? '  (root)' : '') + '</span>'); };
+    tline('<span class="tw">effects</span> <span class="tdim">· tap a line to toggle it</span>');
+    row('dots', on(SET.dots !== false), 'set dots ' + (SET.dots !== false ? 'off' : 'on'), 1);
+    row('ripples', on(SET.ripple !== false), 'set ripple ' + (SET.ripple !== false ? 'off' : 'on'), 1);
+    row('calm', on(SET.dots === false && SET.ripple === false), 'calm ' + (SET.dots === false && SET.ripple === false ? 'off' : 'on'));
+    row('breathing', on(SET.breathe !== false), 'set breathe ' + (SET.breathe !== false ? 'off' : 'on'), 1);
+    row('chaos', on(!!FX.chaos), 'chaos ' + (FX.chaos ? 'off' : 'on'), 1);
+    row('invert', on(R.classList.contains('inv')), 'invert ' + (R.classList.contains('inv') ? 'off' : 'on'), 1);
+    tline('<span class="tdim">' + 'text decode'.padEnd(12, ' ') + '</span> ' + ({ 2: 'slow', 1: 'normal', .45: 'fast' }[SET.decode] || 'normal') + '  <span class="tdim">set decode slow|normal|fast (root)</span>');
+    tline('<span class="tdim">' + 'page pace'.padEnd(12, ' ') + '</span> ' + (SET.pace || 'fast') + '  <span class="tdim">set pace fast|normal|slow (root)</span>');
+    tline('<span class="tdim">' + 'transitions'.padEnd(12, ' ') + '</span> ' + (SET.fx || 'random') + '  <span class="tdim">set fx NAME|random (root)</span>');
+    tline('<span class="tdim">' + 'boot'.padEnd(12, ' ') + '</span> ' + (SET.boot || 'smart') + '  <span class="tdim">set boot always|smart|off (root)</span>');
+    tline('<span class="tdim">' + 'view'.padEnd(12, ' ') + '</span> ' + (SET.view || 'grid') + '  <span class="tdim">view list|grid</span>');
+    tline('<span class="tdim">' + 'icons'.padEnd(12, ' ') + '</span> ' + (SET.icons || 'app') + '  <span class="tdim">set icons app|mosaic|pixel (root)</span>');
+  },
   calm: function (a) { var off = a !== 'off'; SET.dots = SET.ripple = !off; saveSet(); if (off) { R.dataset.nodots = '1'; fieldStop(); } else { delete R.dataset.nodots; fieldStart(); } ttxt(off ? 'calm. no background dots, no ripples. `calm off` to bring them back.' : 'dots and ripples back.', 'tb'); },
   theme: function (a) {
     a = (a || '').toLowerCase();
@@ -1878,7 +1898,7 @@ var TC = {
     SET.theme = a; saveSet(); applyPal(); syncBars(); ttxt('theme // ' + a + ' // ' + THEMES[a].n, 'tb'); log('theme // ' + a);
   },
   color: function (a) { var m = { lime: 'oklch(.93 .23 125)', red: 'oklch(.66 .27 25)', cyan: 'oklch(.85 .15 200)', white: '#fff', amber: 'oklch(.83 .17 75)' }; if (!m[a]) return terr('color: lime | red | cyan | white | amber'); SET.tc = m[a]; saveSet(); term.el.style.setProperty('--tc', m[a]); ttxt('ink set to ' + a); },
-  chaos: function (a) { var on = a !== 'off'; chaos(on); ttxt(on ? 'chaos on. the gui will start misbehaving.' : 'chaos contained.', on ? 'tr' : 'tb'); },
+  chaos: function (a) { var on = a !== 'off'; SET.chaos = on; saveSet(); chaos(on); ttxt(on ? 'chaos on. the gui will start misbehaving.' : 'chaos contained.', on ? 'tr' : 'tb'); },
   invert: function (a) { R.classList.toggle('inv', a !== 'off'); ttxt('gui ' + (a !== 'off' ? 'inverted' : 'restored'), 'tb'); },
   hack: async function (a) {
     var tg = a || 'mainframe';
@@ -1902,7 +1922,7 @@ var TC = {
     ttxt('...restored from the library of babel. nothing was deleted. it never is.', 'tb', { frames: 16, speed: 26 });
   }
 };
-TC.o = TC.run = TC.open; TC.apps = TC.ll = TC.dir = TC.ls; TC.cls = TC.clear; TC.quit = TC.exit; TC.man = TC['?'] = TC.help; TC.g = TC.search = TC.web; TC.cd = TC.go; TC.wifi = function () { TC.settings('wifi'); }; TC.bt = function () { TC.settings('bt'); }; TC.launcher = function () { TC.settings('launcher'); };
+TC.fx = TC.effects; TC.o = TC.run = TC.open; TC.apps = TC.ll = TC.dir = TC.ls; TC.cls = TC.clear; TC.quit = TC.exit; TC.man = TC['?'] = TC.help; TC.g = TC.search = TC.web; TC.cd = TC.go; TC.wifi = function () { TC.settings('wifi'); }; TC.bt = function () { TC.settings('bt'); }; TC.launcher = function () { TC.settings('launcher'); };
 function tfree() {
   term.busy = false; term.skip = false; if (termOpen() && !NB) term.inp.focus();
   var n = term.q.shift(); if (n) { tline('<span class="tw">' + esc(promptStr()) + '</span> ' + esc(n)); term.hist.push(n); term.hi = term.hist.length; trun(n); }
@@ -1912,6 +1932,12 @@ function trun(v) {
   if (/^(11[\/\-. ]?0?1[\/\-. ]?(19)?98|1998[\/\-. ]?11[\/\-. ]?0?1)$/.test(v.replace(/\s+/g, ''))) { bday().then(tfree, tfree); return; }
   if (v === '~' || k === 'su' || k === 'root') { rootLogin().then(tfree, tfree); return; }
   if (/^\d+$/.test(k)) { var a = APPS[parseInt(k, 10) - 1]; return a ? execApp(a) : terr('jsh: no package #' + k); }
+  var hv = hash(v.toLowerCase().replace(/\s+/g, ' ').trim());
+  if (isRoot && (hv === 3387276748 || hv === 1719794217)) {
+    var on = hv === 3387276748; SET.x9 = on; SET.chaos = on; SET.dots = false; SET.ripple = false; SET.breathe = true; SET.pace = on ? 'slow' : 'fast'; SET.decode = on ? 2 : 1;
+    PACE = { fast: .5, normal: .75, slow: 1 }[SET.pace]; saveSet(); delete R.dataset.nobreathe; R.dataset.nodots = '1'; fieldStop(); chaos(on); flick();
+    ttxt(on ? 'ok.' : 'back to normal.', on ? 'tr' : 'tb'); log(on ? 'mode // ▓▓▓▓' : 'mode // default', on); return;
+  }
   if (TC[k]) {
     if (ROOTCMD.indexOf(k) > -1 && !isRoot) return terr(k + ': permission denied (visitor). try ~');
     try { r = TC[k](arg); } catch (err) { console.error(err); return terr('jsh: ' + k + ': crashed. try again.'); }
