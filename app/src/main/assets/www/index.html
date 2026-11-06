@@ -357,6 +357,20 @@ html[data-sel] .grid{padding-bottom:140px}
 .sb-acts button:active{background:var(--hl);color:var(--onhl);border-color:var(--hl)}
 .fo-f{grid-template-columns:1fr 1fr 1fr}
 
+
+/* wall mode: the window shows the live wallpaper; the page drops its field and keeps its UI legible on top */
+html[data-wall] body{background:transparent}
+html[data-wall] .stage{background:transparent!important;background-image:none!important;animation:none}
+html[data-wall] #field,html[data-wall] .giant-wrap{display:none!important}
+html[data-wall] .stage,html[data-wall] .mpanel{--ink:#fff!important;--acc:oklch(.93 .23 125)!important;--hl:#fff!important;--onhl:#000!important;--warn:oklch(.68 .27 0)!important;--fsel:rgba(0,0,0,.55)!important;
+  --dim:rgba(255,255,255,.82)!important;--rule:rgba(255,255,255,.55)!important;--panel:rgba(0,0,0,.42)!important;--row:rgba(0,0,0,.34)!important}
+html[data-wall] .stage{--halo:1px 0 0 #000,-1px 0 0 #000,0 1px 0 #000,0 -1px 0 #000,1px 1px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000;text-shadow:var(--halo)}
+html[data-wall] .lbl,html[data-wall] .stat,html[data-wall] .ph{text-shadow:var(--halo)}
+html[data-wall] .home .pn,html[data-wall] .sh,html[data-wall] #selbar{background:rgba(0,0,0,.55)}
+html[data-wall][data-view="list"] .card.tile .nm{font-weight:700;text-shadow:var(--halo),2px 2px 0 #000,-2px 2px 0 #000,2px -2px 0 #000,-2px -2px 0 #000}
+html[data-wall] #clock{filter:drop-shadow(2px 2px 0 #000) drop-shadow(-1px -1px 0 #000)}
+html[data-wall] .findbar{background:rgba(0,0,0,.5)}
+body.mockwall{background:linear-gradient(160deg,oklch(.93 .23 125) 0 22%,#fff 22% 36%,oklch(.65 .27 0) 36% 58%,#000 58% 72%,oklch(.45 .29 266) 72%)!important}
 /* ===== boot ===== */
 #boot{position:absolute;inset:0;z-index:60;--ink:oklch(.98 0 0);--acc:oklch(.88 .26 142);background:oklch(.46 .29 266);color:var(--ink);
   display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:14px;
@@ -544,7 +558,7 @@ var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { retu
 var store = { get: function (k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
               set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
 var UIV = '0.3';
-var SET = Object.assign({ fx: '', decode: 1, breathe: true, boot: 'smart', icons: 'app', pal: 0, tc: '', labels: true, pace: 'fast', theme: 'jrl', dots: false, ripple: false, view: 'list', chaos: false, x9: false }, store.get('jrl-set', {}));
+var SET = Object.assign({ fx: '', decode: 1, breathe: true, boot: 'smart', icons: 'app', pal: 0, tc: '', labels: true, pace: 'fast', theme: 'jrl', dots: false, ripple: false, view: 'list', chaos: false, x9: false, wall: false }, store.get('jrl-set', {}));
 if (store.get('jrl-uiv', '') && store.get('jrl-uiv', '') < '0.3') { SET.dots = false; SET.ripple = false; SET.view = 'list'; try { localStorage.setItem('jrl-set', JSON.stringify(SET)); } catch (e) {} }
 if (SET.boot === true) SET.boot = 'smart'; if (SET.boot === false) SET.boot = 'off';
 if (store.get('jrl-uiv', '') !== UIV && SET.icons === 'pixel' && !store.get('jrl-iconpick', false)) SET.icons = 'app';
@@ -581,7 +595,10 @@ var MOCK = (function () {
     askCalendar: function () {}, openEvent: function (id) { log('preview // open event ' + id); }, openCalendar: function () { log('preview // calendar'); },
     media: function () { return JSON.stringify({ on: true, active: true, title: 'Windowlicker', artist: 'Aphex Twin', app: 'NTS', pkg: apps[0].pkg, playing: MOCK._p !== false }); },
     mediaCmd: function (c) { if (c === 'toggle') MOCK._p = MOCK._p === false; log('preview // media ' + c); },
-    update: function () { setTimeout(function () { window.JRLnative.event('updated', '"same"'); }, 600); }, version: function () { return 0; }
+    update: function () { setTimeout(function () { window.JRLnative.event('updated', '"same"'); }, 600); }, version: function () { return 0; },
+    _w: { mode: 'marathon', amount: '1', speed: '1', fps: '18', active: false },
+    wallGet: function () { return JSON.stringify(MOCK._w); }, wallSet: function (k, v) { MOCK._w[k] = v; }, wallPick: function () { MOCK._w.active = true; log('preview // live wallpaper picker'); },
+    wallBehind: function (on) { document.body.classList.toggle('mockwall', !!on); }
   };
 })();
 var B = NB || MOCK;
@@ -607,6 +624,10 @@ var API = {
   media: function () { return call(function () { return JSON.parse(B.media()); }, { on: false, na: true }); },
   mediaCmd: function (c) { call(function () { B.mediaCmd(c); }); },
   update: function () { return call(function () { B.update(); return true; }, false); },
+  wallGet: function () { return call(function () { return JSON.parse(B.wallGet()); }, null); },
+  wallSet: function (k, v) { call(function () { B.wallSet(k, String(v)); }); },
+  wallPick: function () { call(function () { B.wallPick(); }); },
+  wallBehind: function (on) { call(function () { B.wallBehind(!!on); }); },
   icon: function (a) { return NB ? '/icon/' + encodeURIComponent(a.key) : mockIcon(a); }
 };
 var MI = {};
@@ -826,7 +847,7 @@ function applyPal() {
   if (FLD) FLD.colT = 0;
 }
 function fieldL() { var P = palFor(current); return P ? P.fl : { apps: .69, sys: .93 }[current]; }
-function syncBars() { API.bars(booted && !termOpen() && fieldL() > .7); }
+function syncBars() { API.bars(booted && !termOpen() && !SET.wall && fieldL() > .7); }
 
 /* ---------- event feed ---------- */
 var feed = $('#feed');
@@ -1037,6 +1058,7 @@ $('#fo-ungroup').addEventListener('click', function () { var h = homeItems(), f 
 document.addEventListener('click', function (e) { var t = e.target.closest('[data-f]'); if (!t || !booted) return; API.haptic('key'); flash(t); openFolder(+t.dataset.f); });
 
 /* ---------- view: grid of tiles or a list of names. applies to home, apps and folders ---------- */
+function applyWall() { if (SET.wall) R.dataset.wall = '1'; else delete R.dataset.wall; API.wallBehind(!!SET.wall); if (FLD) { if (SET.wall) fieldStop(); else fieldStart(); } syncBars(); }
 function applyView() { if (SET.view === 'list') R.dataset.view = 'list'; else delete R.dataset.view; $('#view-t').innerHTML = sym(SET.view === 'list' ? 'apps' : 'rows', { cell: 2.2, gap: .1 }); }
 $('#view-t').addEventListener('click', function (e) { e.preventDefault(); API.haptic('tick'); SET.view = SET.view === 'list' ? 'grid' : 'list'; saveSet(); applyView(); log('view // ' + SET.view); });
 
@@ -1412,7 +1434,7 @@ function fieldSize() {
   FLD.E = new Float32Array(n); FLD.OX = new Float32Array(n); FLD.OY = new Float32Array(n);
 }
 new ResizeObserver(function () { if (FLD.x) fieldSize(); }).observe(stage);
-function fieldStart() { if (SET.dots === false || asleep || termOpen() || current !== 'home' || !booted) return; if (!FLD.x) fieldSize(); if (FLD.run) return; FLD.run = true; FLD.prev = 0; requestAnimationFrame(fieldLoop); }
+function fieldStart() { if (SET.wall || SET.dots === false || asleep || termOpen() || current !== 'home' || !booted) return; if (!FLD.x) fieldSize(); if (FLD.run) return; FLD.run = true; FLD.prev = 0; requestAnimationFrame(fieldLoop); }
 function fieldStop() { FLD.run = false; }
 function fieldPtr(e, t) {
   if (SET.ripple === false) return;
@@ -1798,7 +1820,7 @@ var TC = {
     var G2 = [['apps', 'ls · open X · info X · pin X · unpin X · home · recent · hide X · unhide X · hidden · uninstall X · N'],
       ['phone', 'settings [wifi|bt|display|sound|battery|launcher|notif|wallpaper] · shade · notif · battery'],
       ['web', 'web QUERY · url ADDRESS'],
-      ['shell', 'effects · view list|grid · calm on|off · help · clear · history · date · uptime · whoami · echo · fortune · go home|apps|sys · update · version · reboot · exit']];
+      ['shell', 'effects · wall · view list|grid · calm on|off · help · clear · history · date · uptime · whoami · echo · fortune · go home|apps|sys · update · version · reboot · exit']];
     G2.push(isRoot ? ['root', 'theme list|next|NAME · set pace fast|normal|slow · set dots on|off · set ripple on|off · set fx|decode|breathe|boot always|smart|off|icons app|mosaic|pixel · field [N|next] · color · chaos on|off · invert on|off · neofetch · banner · hack X · rm -rf / · logout']
                    : ['root', "~  (escalate. there's more behind it)"]);
     G2.forEach(function (g) { tline('<span class="ti">' + g[0] + '</span> ' + esc(g[1])); });
@@ -1871,6 +1893,29 @@ var TC = {
     SET.pal = n; SET.theme = 'jrl'; saveSet(); applyPal(); ttxt('home field ' + pad(n + 1) + ' // ' + HOMEPAL[n].n, 'tb');
   },
   view: function (a) { a = (a || '').toLowerCase(); if (a !== 'list' && a !== 'grid') a = SET.view === 'list' ? 'grid' : 'list'; SET.view = a; saveSet(); applyView(); ttxt('view: ' + a, 'tb'); },
+  wall: function (a) {
+    var p = (a || '').toLowerCase().split(/\s+/), k = p[0], v = p[1], W = API.wallGet();
+    if (!W) return terr('wall: this version of the app has no live wallpaper. install the latest apk from releases.');
+    var AM = { 1: '0', 2: '1', 3: '2', 4: '3' }, SP = { slow: '0', normal: '1', fast: '2' };
+    if (!k) {
+      tline('<span class="tw">wall</span> <span class="tdim">· the jerelevance colour generator as a live wallpaper</span>');
+      var row = function (n, st, how) { tline('<span class="lk" data-run="' + esc(how) + '">' + n.padEnd(10, ' ') + '</span> ' + st + '  <span class="tdim">' + esc(how) + '</span>'); };
+      row('wallpaper', W.active ? '<span class="ti">set</span>' : '<span class="tdim">not set</span>', 'wall set');
+      row('behind', SET.wall ? '<span class="ti">on</span>' : '<span class="tdim">off</span>', 'wall ' + (SET.wall ? 'off' : 'on'));
+      row('mode', W.mode, 'wall mode ' + (W.mode === 'marathon' ? 'drift' : 'marathon'));
+      tline('<span class="tdim">' + 'amount'.padEnd(10, ' ') + '</span> ' + (+W.amount + 1) + '  <span class="tdim">wall amount 1-4 (how hard and how fast marathon cuts)</span>');
+      tline('<span class="tdim">' + 'speed'.padEnd(10, ' ') + '</span> ' + ({ 0: 'slow', 1: 'normal', 2: 'fast' }[W.speed] || 'normal') + '  <span class="tdim">wall speed slow|normal|fast</span>');
+      tline('<span class="tdim">' + 'fps'.padEnd(10, ' ') + '</span> ' + W.fps + '  <span class="tdim">wall fps 8-30 (lower saves battery)</span>');
+      return;
+    }
+    if (k === 'set' || k === 'pick') { ttxt('opening the live wallpaper picker. choose "home and lock screens".', 'tb'); return API.wallPick(); }
+    if (k === 'on' || k === 'off') { SET.wall = k === 'on'; saveSet(); applyWall(); ttxt(SET.wall ? 'the field steps aside. wallpaper shows through.' + (W.active ? '' : ' (set it first: wall set)') : 'field back.', 'tb'); return; }
+    if (k === 'mode') { if (v !== 'marathon' && v !== 'drift') return terr('wall mode: marathon | drift'); API.wallSet('mode', v); return ttxt('wallpaper mode: ' + v, 'tb'); }
+    if (k === 'amount') { if (!AM[v]) return terr('wall amount: 1 | 2 | 3 | 4'); API.wallSet('amount', AM[v]); return ttxt('wallpaper amount: ' + v, 'tb'); }
+    if (k === 'speed') { if (!SP[v]) return terr('wall speed: slow | normal | fast'); API.wallSet('speed', SP[v]); return ttxt('wallpaper speed: ' + v, 'tb'); }
+    if (k === 'fps') { var n = parseInt(v, 10); if (!(n >= 8 && n <= 30)) return terr('wall fps: 8-30'); API.wallSet('fps', String(n)); return ttxt('wallpaper frame rate: ' + n, 'tb'); }
+    terr('wall: set | on | off | mode | amount | speed | fps');
+  },
   effects: function () {
     var on = function (v) { return v ? '<span class="ti">on</span>' : '<span class="tdim">off</span>'; }, row = function (name, state, how, root) {
       tline('<span class="lk" data-run="' + esc(how) + '">' + name.padEnd(12, ' ') + '</span> ' + state + '  <span class="tdim">' + esc(how) + (root ? '  (root)' : '') + '</span>'); };
@@ -1885,6 +1930,7 @@ var TC = {
     tline('<span class="tdim">' + 'page pace'.padEnd(12, ' ') + '</span> ' + (SET.pace || 'fast') + '  <span class="tdim">set pace fast|normal|slow (root)</span>');
     tline('<span class="tdim">' + 'transitions'.padEnd(12, ' ') + '</span> ' + (SET.fx || 'random') + '  <span class="tdim">set fx NAME|random (root)</span>');
     tline('<span class="tdim">' + 'boot'.padEnd(12, ' ') + '</span> ' + (SET.boot || 'smart') + '  <span class="tdim">set boot always|smart|off (root)</span>');
+    row('wallpaper', on(!!SET.wall), 'wall ' + (SET.wall ? 'off' : 'on'));
     tline('<span class="tdim">' + 'view'.padEnd(12, ' ') + '</span> ' + (SET.view || 'grid') + '  <span class="tdim">view list|grid</span>');
     tline('<span class="tdim">' + 'icons'.padEnd(12, ' ') + '</span> ' + (SET.icons || 'app') + '  <span class="tdim">set icons app|mosaic|pixel (root)</span>');
   },
@@ -1993,6 +2039,7 @@ DEV = API.device() || {}; DEVT = performance.now();
 if (SET.breathe === false) R.dataset.nobreathe = '1';
 if (SET.dots === false) R.dataset.nodots = '1';
 applyView();
+applyWall();
 loadApps(); poll(); tick(); renderPager(); applyPal(); refreshSys(); pollAgenda(); pollMedia();
 $('#mname').textContent = modName();
 var bootNow = SET.boot === 'always' || (SET.boot !== 'off' && ((DEV.uptime && DEV.uptime < 600) || store.get('jrl-uiv', '') !== UIV));

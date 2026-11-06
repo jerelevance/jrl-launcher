@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">JRL</string>
     <string name="notif_label">JRL notification count</string>
+    <string name="wall_label">JRL Color</string>
+    <string name="wall_desc">The jerelevance colour generator. Marathon or Drift; set it up with `wall` in the JRL terminal.</string>
 </resources>

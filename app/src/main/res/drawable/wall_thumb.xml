@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marathon stripes: lime, white, hot pink, black, cobalt -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item><shape><solid android:color="#FF1722F6" /></shape></item>
+    <item android:bottom="160dp"><shape><solid android:color="#FFC5FF18" /></shape></item>
+    <item android:top="40dp" android:bottom="120dp"><shape><solid android:color="#FFFFFFFF" /></shape></item>
+    <item android:top="80dp" android:bottom="80dp"><shape><solid android:color="#FFFF2E8C" /></shape></item>
+    <item android:top="120dp" android:bottom="40dp"><shape><solid android:color="#FF000000" /></shape></item>
+    <item android:width="200dp" android:height="200dp" />
+</layer-list>

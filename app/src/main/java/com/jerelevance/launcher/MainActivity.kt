@@ -10,11 +10,13 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.LauncherApps
 import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.UserHandle
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -47,6 +49,7 @@ class MainActivity : ComponentActivity() {
     lateinit var web: WebView
         private set
     private var pageReady = false
+    private lateinit var rootView: FrameLayout
     private var insetJs = ""
     private val launcherApps by lazy { getSystemService(LauncherApps::class.java) }
     private val calendarPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { emit("calendar") }
@@ -114,6 +117,7 @@ class MainActivity : ComponentActivity() {
         }
 
         val root = FrameLayout(this).apply { setBackgroundColor(FIELD_BLUE) }
+        rootView = root
         root.addView(web, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
         setContentView(root)
 
@@ -221,6 +225,15 @@ class MainActivity : ComponentActivity() {
             fetching = false
             if (manual || r == "updated") emit("updated", "'$r'")
         }.start()
+    }
+
+    /** Wall mode: the window shows the system wallpaper and the page draws over it with a transparent field. */
+    fun setWallBehind(on: Boolean) {
+        val bg = if (on) Color.TRANSPARENT else FIELD_BLUE
+        if (on) window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER) else window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
+        window.setBackgroundDrawable(ColorDrawable(bg))
+        rootView.setBackgroundColor(bg)
+        web.setBackgroundColor(bg)
     }
 
     fun setDarkBarIcons(dark: Boolean) {
