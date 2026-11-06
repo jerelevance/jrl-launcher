@@ -14,9 +14,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          zip -qr jrl-wallpapers.zip jere no-jere marathon
+          zip -qr jrl-wallpapers.zip jere no-jere
           (cd jere && zip -q ../jrl-jere.zip *)
           (cd no-jere && zip -q ../jrl-no-jere.zip *)
+      - name: Drop release files that are no longer in the branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          id=$(gh api repos/${{ github.repository }}/releases/tags/wallpapers-v1 --jq .id 2>/dev/null || true)
+          [ -z "$id" ] && exit 0
+          gh api repos/${{ github.repository }}/releases/$id/assets --paginate --jq '.[] | "\(.id) \(.name)"' | while read aid name; do
+            case "$name" in jrl-wallpapers.zip|jrl-jere.zip|jrl-no-jere.zip) continue;; esac
+            if [ ! -e "jere/$name" ] && [ ! -e "no-jere/$name" ]; then echo "removing $name"; gh api -X DELETE repos/${{ github.repository }}/releases/assets/$aid; fi
+          done
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: wallpapers-v1
@@ -28,8 +38,6 @@ jobs:
             **jere** (`jrl-…`): the full JERE//LEVANCE treatment. Giant word, JRL//01 label, boot screen.
             **no-jere** (`nojere-…`): same designs, no name anywhere. Ripples on their own, FIELD in the glitch loop, the culture glyph breathing.
 
-            **marathon** (`marathon-…`, `redwhite-…`, `marathon-theme-…`): the Marathon colour generator from jerelevance. Site colours, red & white, and the launcher's marathon theme. 15 s loops.
-
             **Loops** (12 s, seamless): `field`, `glitch`, `breathe`. **Stills:** one per launcher theme.
             **Folders as zips:** `jrl-jere.zip`, `jrl-no-jere.zip`, or both in `jrl-wallpapers.zip`.
 
@@ -37,7 +45,6 @@ jobs:
           files: |
             jere/*
             no-jere/*
-            marathon/*
             jrl-wallpapers.zip
             jrl-jere.zip
             jrl-no-jere.zip
