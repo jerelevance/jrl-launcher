@@ -66,7 +66,9 @@ function dottedWord(ctx, word, step, opts) {
   return out;
 }
 function drawDots(ctx, pts, pitch, col, fn) { for (let i = 0; i < pts.length; i += 3) { const X = pts[i], Y = pts[i + 1], a = pts[i + 2]; ctx.fillStyle = fn ? fn(X, Y, a) : col; ctx.beginPath(); ctx.arc(X, Y, pitch * .46 * (.6 + .4 * a), 0, 6.2832); ctx.fill(); } }
+let NJ = false;   // no-jere: no JERELEVANCE, no JRL label
 function giant(ctx, f, t, k) {
+  if (NJ && f.word === 'Jerelevance') f = Object.assign({}, f, { word: 'Field' });
   const fsz = Math.min(W * .42, 210 * S), pitch = 5 * S, colW = fsz * 1.05;
   const pts = dottedWord(ctx, f.word, breathStep(t, k || 2), { pitch, fs: fsz, w: colW, h: H * 1.1, x0: W - colW + fsz * .06, y0: 34 * S, align: 'left' });
   drawDots(ctx, pts, pitch, mix(f.ink, .2));
@@ -99,8 +101,7 @@ function scene(ctx, f, t) {
   const cell = 13 * S; sym(ctx, f.sym, W * .3, H * .74, cell, f.ink, f.acc);
   ctx.fillStyle = f.ink; ctx.font = '700 ' + (11 * S) + 'px "JRL Mono"'; ctx.textBaseline = 'alphabetic';
   try { ctx.letterSpacing = (2 * S) + 'px'; } catch (e) {}
-  ctx.fillText('JRL//01  ' + f.lbl.toUpperCase(), 22 * S, H - 30 * S);
-  ctx.fillStyle = f.acc; ctx.fillRect(22 * S, H - 24 * S, 46 * S, 3 * S);
+  if (!NJ) { ctx.fillText('JRL//01  ' + f.lbl.toUpperCase(), 22 * S, H - 30 * S); ctx.fillStyle = f.acc; ctx.fillRect(22 * S, H - 24 * S, 46 * S, 3 * S); }
   try { ctx.letterSpacing = '0px'; } catch (e) {}
 }
 const bufA = document.createElement('canvas'), bufB = document.createElement('canvas');
@@ -150,23 +151,30 @@ const W1 = waves(7, 11);
 function fieldLoop(t) { const f = F.home; x.fillStyle = f.bg; x.fillRect(0, 0, W, H); field(x, f, t, W1); }
 function breatheLoop(t) {
   const f = F.home; x.fillStyle = f.bg; x.fillRect(0, 0, W, H); grid(x, f, .16);
+  if (NJ) {   /* the culture organism, breathing in stepped sizes, same lime scan */
+    const st = breathStep(t, 4), cell = Math.min(W, H) * (.085 - st * .008), rows = SYM.culture, sweep = ((t / T) % 1) * (H + 400 * S) - 200 * S;
+    const w = rows[0].length * cell, h = rows.length * cell, r = cell * (.41 - st * .025);
+    rows.forEach((row, j) => [...row].forEach((ch, i) => { if (ch === '.') return; const X = (W - w) / 2 + i * cell + cell / 2, Y = (H - h) / 2 + j * cell + cell / 2;
+      x.fillStyle = Math.abs(Y - sweep) < 60 * S || ch === 'X' ? f.acc : f.ink; x.beginPath(); if (ch === 'X') x.rect(X - r, Y - r, r * 2, r * 2); else x.arc(X, Y, r, 0, 6.2832); x.fill(); }));
+    return;
+  }
   const fsz = Math.min(W * .62, H * .118, 360 * S), pitch = 4.6 * S, colW = fsz * 1.1;
   const pts = dottedWord(x, 'Jerelevance', breathStep(t, 4), { pitch, fs: fsz, w: colW, h: H * .98, x0: (W - colW) / 2, y0: H * .01, fit: true });
   const sweep = ((t / T) % 1) * (H + 400 * S) - 200 * S;   // a lime scan band travels down once per loop
   drawDots(x, pts, pitch, f.ink, (X, Y) => Math.abs(Y - sweep) < 60 * S ? f.acc : f.ink);
 }
 window.R = {
-  size, T, FPS,
+  size, T, FPS, nj(v) { NJ = !!v; },
   frame(kind, t) { if (kind === 'field') fieldLoop(t); else if (kind === 'glitch') glitchLoop(t); else breatheLoop(t); },
   /* stills: theme home palette, frozen field, giant word, small label */
   still(name) {
     if (name === 'boot') return bootStill();
     const P = (THEMES[name] && THEMES[name].home) || P0, f = { bg: 'oklch(' + P.fl + ' ' + P.fc + ' ' + P.fh + ')', ink: P.ink, acc: P.acc, word: 'Jerelevance', sym: 'culture', lbl: name };
-    x.fillStyle = f.bg; x.fillRect(0, 0, W, H); grid(x, f, .14); giant(x, f, 0, 2);
-    const sq = W / H > .7, R0 = sq ? Math.min(W, H) * .25 : W * .3, cx0 = sq ? W * .34 : W * .4, cy0 = Math.min(sq ? H * .6 : H * .74, H - 92 * S - R0);
+    x.fillStyle = f.bg; x.fillRect(0, 0, W, H); grid(x, f, .14); if (!NJ) giant(x, f, 0, 2);
+    const sq = W / H > .7, R0 = sq ? Math.min(W, H) * .25 : W * .3, cx0 = NJ ? W * .5 : sq ? W * .34 : W * .4, cy0 = Math.min(sq ? H * .6 : H * .74, H - 92 * S - R0);
     field(x, f, 0, [], { extra: [{ x: cx0, y: cy0, r: R0, a: 1 }, { x: cx0, y: cy0, r: R0 * .3, a: .7 }] });
     x.fillStyle = f.ink; x.font = '700 ' + (11 * S) + 'px "JRL Mono"'; try { x.letterSpacing = (2 * S) + 'px'; } catch (e) {}
-    x.fillText('JRL//01  ' + name.toUpperCase(), 22 * S, H - 30 * S); x.fillStyle = f.acc; x.fillRect(22 * S, H - 24 * S, 46 * S, 3 * S); try { x.letterSpacing = '0px'; } catch (e) {}
+    if (!NJ) { x.fillText('JRL//01  ' + name.toUpperCase(), 22 * S, H - 30 * S); x.fillStyle = f.acc; x.fillRect(22 * S, H - 24 * S, 46 * S, 3 * S); } try { x.letterSpacing = '0px'; } catch (e) {}
   }
 };
 function bootStill() {

@@ -1,6 +1,7 @@
 # Wallpapers
 
 Lock-screen loops and stills for the Galaxy Z Fold7, drawn with the same code as the launcher.
+Two folders: **`jere/`** (full JERE//LEVANCE treatment) and **`no-jere/`** (same designs, no name anywhere).
 Download them from [Releases › wallpapers](https://github.com/jerelevance/jrl-launcher/releases/tag/wallpapers-v1).
 
 | | cover (1080×2520) | inner (1968×2184) |
@@ -18,4 +19,4 @@ Videos play on the lock screen only.
 
 **Regenerate:** copy the three font files from `app/src/main/assets/www/fonts` (CI fetches them) next to
 `render.html`, then `node drive.js stills` or `node drive.js loop field|glitch|breathe cover|inner`, and
-encode the frames with ffmpeg.
+encode the frames with ffmpeg. Prefix with `NJ=1` for the no-jere set.
