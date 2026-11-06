@@ -317,20 +317,25 @@ p{margin:0}
 #view-t{width:34px;height:32px;display:grid;place-items:center;border-left:1.5px solid var(--rule);color:var(--ink)}
 #view-t:active{background:var(--hl);color:var(--onhl)}
 
-/* list view: names set wide in Archivo, icon small on the left, folders as NAME/ + count */
-html[data-view="list"] .hgrid,html[data-view="list"] .grid,html[data-view="list"] .fo-grid{grid-template-columns:minmax(0,1fr);gap:3px}
-html[data-view="list"] .card.tile{width:100%;justify-self:stretch;height:48px!important;grid-template-columns:30px minmax(0,1fr) auto auto;grid-template-rows:1fr;justify-items:start;align-items:center;padding:0 12px 0 9px;gap:14px}
-html[data-view="list"] .card.tile .ico{grid-row:1;grid-column:1;width:28px;height:28px;align-self:center}
-html[data-view="list"] .card.tile .nm{grid-row:1;grid-column:2;font-family:var(--display);font-stretch:125%;font-weight:800;font-size:16px;line-height:1;letter-spacing:-.015em;text-align:left;-webkit-line-clamp:1;max-width:100%}
-html[data-view="list"] .card.tile .nd{position:static;grid-row:1;grid-column:4;display:none}
+/* list view: plain terminal lines. mono, no icons, no boxes. folders read as name/ */
+html[data-view="list"] .hgrid,html[data-view="list"] .grid,html[data-view="list"] .fo-grid{grid-template-columns:minmax(0,1fr);gap:0}
+html[data-view="list"] .card.tile{width:100%;justify-self:stretch;height:38px!important;background:transparent;grid-template-columns:minmax(0,1fr) auto auto;grid-template-rows:1fr;justify-items:start;align-items:center;padding:0 6px;gap:12px;box-shadow:none}
+html[data-view="list"] .card.tile .ico,html[data-view="list"] .card.fold .fico{display:none}
+html[data-view="list"] .card.tile .nm{grid-row:1;grid-column:1;font-family:var(--mono);font-stretch:100%;font-weight:400;font-size:16px;line-height:1;letter-spacing:0;text-transform:none;text-align:left;-webkit-line-clamp:1;max-width:100%}
+html[data-view="list"] .card.tile .nd{position:static;grid-row:1;grid-column:3;display:none;width:6px;height:6px}
 html[data-view="list"] .card.tile.ntf .nd{display:block}
-html[data-view="list"] .card.fold .fico{grid-row:1;grid-column:1;width:28px;padding:2px;gap:2px;border-width:1px}
-html[data-view="list"] .card.fold .fc{display:block;grid-row:1;grid-column:3;font-family:var(--dot);font-weight:900;font-size:15px;letter-spacing:.04em;color:var(--dim)}
-html[data-view="list"] .card.fold{background:transparent;box-shadow:inset 0 0 0 1.5px var(--ink)}
-html[data-view="list"] .card.tile:active,html[data-view="list"] .card.tile.hold{background:var(--hl)}
-html[data-view="list"] .lh{height:auto;grid-column:1/-1;border:0;border-bottom:1.5px solid var(--rule);font-size:20px;place-items:center start;padding:10px 2px 4px;color:var(--ink)}
-html[data-view="list"] .lh:first-child{padding-top:0}
-html[data-view="list"] .grid{gap:3px}
+html[data-view="list"] .card.fold .fc{display:block;grid-row:1;grid-column:2;font-family:var(--mono);font-weight:400;font-size:13px;color:var(--dim)}
+html[data-view="list"] .card.fold .nm{font-weight:700}
+html[data-view="list"] .card.tile:active,html[data-view="list"] .card.tile.hold{background:var(--hl);color:var(--onhl)}
+html[data-view="list"] .card.tile:active .fc,html[data-view="list"] .card.tile.hold .fc{color:var(--onhl)}
+html[data-view="list"] .lh{display:block;height:auto;grid-column:1/-1;border:0;font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:.1em;place-items:center start;padding:14px 6px 4px;color:var(--dim)}
+html[data-view="list"] .lh::before{content:"# "}
+html[data-view="list"] .lh:first-child{padding-top:2px}
+html[data-view="list"][data-sel] #grid .card{outline:0}
+html[data-view="list"][data-sel] #grid .card .nm::before{content:"[ ] ";color:var(--dim)}
+html[data-view="list"][data-sel] #grid .card.sel{background:transparent;color:var(--ink);outline:0}
+html[data-view="list"][data-sel] #grid .card.sel .nm::before{content:"[x] ";color:var(--acc)}
+html[data-view="list"][data-sel] #grid .card.sel::after{display:none}
 
 /* selecting several apps */
 .card .ck{display:none}

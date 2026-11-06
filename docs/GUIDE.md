@@ -81,7 +81,7 @@ Folders are shown as directories: `MUSIC/`, with the slash in the accent color a
 
 ## 7. Looks
 
-**Grid or list.** Tap the ▦ / ≡ button in the find bar, or type `view list` / `view grid`. List view sets names wide in Archivo and applies to home, apps and folders.
+**Grid or list.** Tap the ▦ / ≡ button in the find bar, or type `view list` / `view grid`. List view reads like terminal output: plain mono names, no icons, no boxes, `# a` section markers in the drawer, folders as `music/` with a count. When you're picking apps for a folder, rows show `[ ]` and `[x]`. It applies to home, apps and folders.
 
 **Icons** (root):
 
