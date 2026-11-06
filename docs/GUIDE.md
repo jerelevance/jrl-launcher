@@ -170,7 +170,7 @@ neofetch · banner · skull · hack TARGET · rm -rf / · logout
 - **`set fx construct`** in root. Every module rebuilds itself block by block with labelled, scanlined proxies.
 - **`neofetch`**, **`fortune`**, **`skull`**, **`invert on`**.
 - **Two characters never settle.** On titles and labels, one or two letters keep flickering after the decode. That's on purpose.
-- **Hold the house** in the bottom-right pager. An inverting sweep crosses the screen from a random side at a random angle, flipping every colour it passes over, like the flash in the root login.
+- **Hold the house** in the bottom-right pager. A wide white sweep crosses the screen from a random side at a random angle; inside it, the screen reads as dark text on white, like the flash in the root login.
 - **Touch the field** on home. It ripples. Leave it alone and it ripples by itself every few seconds.
 
 ## 10. Updates
