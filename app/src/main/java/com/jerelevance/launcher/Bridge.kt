@@ -2,7 +2,6 @@ package com.jerelevance.launcher
 
 import android.Manifest
 import android.app.SearchManager
-import android.app.WallpaperManager
 import android.content.ComponentName
 import android.content.ContentUris
 import android.content.Intent
@@ -258,31 +257,4 @@ class Bridge(private val act: MainActivity) {
 
     @JavascriptInterface
     fun version(): Int = try { pm.getPackageInfo(act.packageName, 0).versionCode } catch (_: Exception) { 0 }
-
-    // ---- live wallpaper: the colour generator ----
-
-    @JavascriptInterface
-    fun wallGet(): String {
-        val p = act.getSharedPreferences("wall", android.content.Context.MODE_PRIVATE)
-        val active = try { WallpaperManager.getInstance(act).wallpaperInfo?.packageName == act.packageName } catch (_: Exception) { false }
-        return JSONObject().put("mode", p.getString("mode", "marathon")).put("amount", p.getString("amount", "1"))
-            .put("speed", p.getString("speed", "1")).put("fps", p.getString("fps", "18")).put("active", active).toString()
-    }
-
-    @JavascriptInterface
-    fun wallSet(key: String, value: String) {
-        if (key !in setOf("mode", "amount", "speed", "fps")) return
-        act.getSharedPreferences("wall", android.content.Context.MODE_PRIVATE).edit().putString(key, value).apply()
-    }
-
-    @JavascriptInterface
-    fun wallPick() = ui {
-        val direct = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER)
-            .putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, ComponentName(act, JrlWallpaper::class.java))
-        if (!act.start(direct)) act.start(Intent(WallpaperManager.ACTION_LIVE_WALLPAPER_CHOOSER))
-    }
-
-    /** Shows whatever wallpaper is set straight through the launcher (the page goes transparent). */
-    @JavascriptInterface
-    fun wallBehind(on: Boolean) = ui { act.setWallBehind(on) }
 }

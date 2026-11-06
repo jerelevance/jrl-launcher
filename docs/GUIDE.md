@@ -131,26 +131,6 @@ In `jrl`, `field next` / `field N` / `field list` swaps just the home colour: bl
 
 **Speed** (root): `set pace fast` is the default. `normal` and `slow` give the transitions more drama.
 
-## 7½. Live wallpaper: the colour generator
-
-The jerelevance colour generator runs as an Android live wallpaper, ported natively from the site. **Marathon** (default) is hard, flat saturated colour with pure black and white, cutting to a new set every few seconds. **Drift** is four soft colours turning slowly.
-
-1. Type `wall set` in the terminal (or tap the line in `wall`). The live wallpaper preview opens on **JRL Color**.
-2. Tap *Set wallpaper* and pick **Home and lock screens**.
-3. Type `wall on` to drop the launcher's own field so the wallpaper shows straight through home, apps and sys. The UI switches to white with a hard black outline so it reads on any colour. `wall off` brings the field back.
-
-| `wall …` | does |
-|---|---|
-| *(nothing)* | shows every setting; tap a line to change it |
-| `set` | opens the wallpaper picker |
-| `on` / `off` | wallpaper behind the launcher |
-| `mode marathon` / `mode drift` | the two looks from the site |
-| `amount 1-4` | Marathon only: how hard the edges are and how fast sets cut (1 soft and slow, 4 harsh and quick) |
-| `speed slow` / `normal` / `fast` | how quickly it moves |
-| `fps 8-30` | frame rate. 18 by default; lower saves battery |
-
-It only draws while it's on screen and stops completely when the screen is off or an app covers it.
-
 ## 8. The terminal
 
 Tap the prompt. Typing searches; **Enter** runs the highlighted row; **Tab** completes. Tap any underlined name in the output to run it.
@@ -167,7 +147,7 @@ web QUERY / g Q   search the web                        url ADDRESS
 settings [wifi|bt|display|sound|battery|launcher|notif|wallpaper|location|airplane|dev|storage|data]
 wifi · bt · launcher · shade · notif · battery
 date · uptime · whoami · id · uname · pwd · echo · fortune · history · clear
-go home|apps|sys · effects · wall · calm on|off · update · version · reboot · exit · help
+go home|apps|sys · effects · calm on|off · update · version · reboot · exit · help
 ```
 
 **Root.** Type `~` (or `su`) and sit through the login.
