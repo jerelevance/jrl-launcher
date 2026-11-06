@@ -309,6 +309,49 @@ p{margin:0}
 .fo-f button+button{border-left:1px solid var(--rule)}
 .fo-f button:active{background:var(--hl);color:var(--onhl)}
 
+
+/* folders read as directories: NAME/ with the slash in the accent, member count in Doto */
+.sl{color:var(--acc);font-weight:inherit;margin-left:1px}
+.card:active .sl,.card.hold .sl{color:inherit}
+.fc{display:none}
+#view-t{width:34px;height:32px;display:grid;place-items:center;border-left:1.5px solid var(--rule);color:var(--ink)}
+#view-t:active{background:var(--hl);color:var(--onhl)}
+
+/* list view: names set wide in Archivo, icon small on the left, folders as NAME/ + count */
+html[data-view="list"] .hgrid,html[data-view="list"] .grid,html[data-view="list"] .fo-grid{grid-template-columns:minmax(0,1fr);gap:3px}
+html[data-view="list"] .card.tile{width:100%;justify-self:stretch;height:48px!important;grid-template-columns:30px minmax(0,1fr) auto auto;grid-template-rows:1fr;justify-items:start;align-items:center;padding:0 12px 0 9px;gap:14px}
+html[data-view="list"] .card.tile .ico{grid-row:1;grid-column:1;width:28px;height:28px;align-self:center}
+html[data-view="list"] .card.tile .nm{grid-row:1;grid-column:2;font-family:var(--display);font-stretch:125%;font-weight:800;font-size:16px;line-height:1;letter-spacing:-.015em;text-align:left;-webkit-line-clamp:1;max-width:100%}
+html[data-view="list"] .card.tile .nd{position:static;grid-row:1;grid-column:4;display:none}
+html[data-view="list"] .card.tile.ntf .nd{display:block}
+html[data-view="list"] .card.fold .fico{grid-row:1;grid-column:1;width:28px;padding:2px;gap:2px;border-width:1px}
+html[data-view="list"] .card.fold .fc{display:block;grid-row:1;grid-column:3;font-family:var(--dot);font-weight:900;font-size:15px;letter-spacing:.04em;color:var(--dim)}
+html[data-view="list"] .card.fold{background:transparent;box-shadow:inset 0 0 0 1.5px var(--ink)}
+html[data-view="list"] .card.tile:active,html[data-view="list"] .card.tile.hold{background:var(--hl)}
+html[data-view="list"] .lh{height:auto;grid-column:1/-1;border:0;border-bottom:1.5px solid var(--rule);font-size:20px;place-items:center start;padding:10px 2px 4px;color:var(--ink)}
+html[data-view="list"] .lh:first-child{padding-top:0}
+html[data-view="list"] .grid{gap:3px}
+
+/* selecting several apps */
+.card .ck{display:none}
+html[data-sel] #grid .card{outline:1.5px dashed var(--rule);outline-offset:-1.5px}
+html[data-sel] #grid .card.sel{background:var(--acc);color:var(--fsel);outline:2px solid var(--ink)}
+html[data-sel] #grid .card.sel::after{content:"";position:absolute;right:6px;top:6px;width:10px;height:10px;background:var(--ink)}
+html[data-view="list"][data-sel] #grid .card.sel::after{top:50%;margin-top:-5px;right:12px}
+html[data-sel] .grid{padding-bottom:140px}
+#selbar{position:absolute;z-index:8;left:0;right:0;bottom:0;background:var(--fsel);color:var(--ink);border-top:2px solid var(--ink);
+  padding:10px calc(var(--sar) + 16px) calc(var(--sab) + 12px) calc(var(--sal) + 16px);display:grid;gap:10px;animation:unfold .26s steps(4,end) both}
+.sb-top{display:flex;align-items:center;gap:10px;min-width:0}
+#sb-n{font-family:var(--dot);font-weight:900;font-size:28px;line-height:1}
+#sb-name{flex:1;min-width:0;background:transparent;border:1.5px solid var(--ink);padding:8px 10px;font:inherit;font-size:13px;color:var(--ink);outline:0}
+#sb-name::placeholder{color:var(--dim);letter-spacing:.14em;font-size:10px}
+#sb-to{color:var(--ink);font-weight:700}
+.sb-acts{display:grid;grid-template-columns:1.4fr 1fr .8fr;gap:6px}
+.sb-acts button{height:42px;border:1.5px solid var(--ink);font-size:10px;letter-spacing:.14em;text-transform:uppercase;transition:background .12s,color .12s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 8px}
+.sb-acts button:first-child{background:var(--ink);color:var(--fsel)}
+.sb-acts button:active{background:var(--hl);color:var(--onhl);border-color:var(--hl)}
+.fo-f{grid-template-columns:1fr 1fr 1fr}
+
 /* ===== boot ===== */
 #boot{position:absolute;inset:0;z-index:60;--ink:oklch(.98 0 0);--acc:oklch(.88 .26 142);background:oklch(.46 .29 266);color:var(--ink);
   display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:14px;
@@ -431,13 +474,17 @@ html[data-nodots] #field,html[data-nodots] .giant-wrap{display:none!important}
       <div class="ttl"><h2 id="t-apps">Apps</h2><span class="tag" id="apps-tag">000</span></div>
       <span class="lbl" id="apps-sub" data-dec="k">a→z // hold for options</span>
     </div>
-    <label class="findbar blk" data-blk="Find" for="find"><span class="u">find:</span><input id="find" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off" enterkeyhint="go" placeholder="type an app name" aria-label="Find an app"><button type="button" id="find-x" aria-label="Clear" hidden>×</button></label>
+    <label class="findbar blk" data-blk="Find" for="find"><span class="u">find:</span><input id="find" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off" enterkeyhint="go" placeholder="type an app name" aria-label="Find an app"><button type="button" id="find-x" aria-label="Clear" hidden>×</button><button type="button" id="view-t" aria-label="Switch between grid and list"></button></label>
     <div class="gridwrap blk" data-blk="Packages">
       <div class="grid" id="grid"></div>
       <nav class="az" id="az" aria-label="Jump to letter"></nav>
     </div>
   </section>
   <div id="azbig" hidden></div>
+  <div id="selbar" hidden>
+    <div class="sb-top"><b id="sb-n">00</b><span class="lbl">selected</span><input id="sb-name" maxlength="18" placeholder="FOLDER NAME" autocomplete="off" spellcheck="false" aria-label="Folder name"><span class="lbl" id="sb-to"></span></div>
+    <div class="sb-acts"><button type="button" data-s="make" id="sb-make">Make folder</button><button type="button" data-s="pin">Pin to home</button><button type="button" data-s="cancel">Cancel</button></div>
+  </div>
 
   <footer class="floor">
     <button type="button" id="prompt" aria-label="Search and command line"><span class="u">visitor@jrl:~$</span><span class="cur"></span><span class="hint" id="p-hint">search · type ~ for root</span></button>
@@ -458,7 +505,7 @@ html[data-nodots] #field,html[data-nodots] .giant-wrap{display:none!important}
   <div class="sh fo" role="dialog" aria-label="Folder">
     <div class="fo-h"><input id="fo-name" maxlength="18" aria-label="Folder name" autocomplete="off" spellcheck="false"><span class="lbl" id="fo-n">00</span></div>
     <div class="fo-grid" id="fo-grid"></div>
-    <div class="fo-f"><button type="button" id="fo-ungroup">Ungroup</button><button type="button" id="fo-close">Close</button></div>
+    <div class="fo-f"><button type="button" id="fo-add">Add apps</button><button type="button" id="fo-ungroup">Ungroup</button><button type="button" id="fo-close">Close</button></div>
   </div>
 </div>
 
@@ -610,6 +657,7 @@ var SYM = {
   reports: ['XX.######', 'XX.......', '...######', '.........', 'XX.####..', 'XX.......', '...######', '.........', 'XX.#####.'],
   bird: ['#.......#.', '##.....##.', '.##...##..', '..##.##...', '...###....', '.#######..', '..#####...', '...###....'],
   ring: ['..###..', '.#...#.', '#.....#', '#..#..#', '#.....#', '.#...#.', '..###..'],
+  rows: ['XX.#####', '........', 'XX.#####', '........', 'XX.#####', '........', 'XX.#####'],
   play: ['X.....', '##....', '####..', '######', '####..', '##....', 'X.....'],
   pause: ['XX.XX', 'XX.XX', 'XX.XX', 'XX.XX', 'XX.XX', 'XX.XX', 'XX.XX'],
   prev: ['X....X', 'X...##', 'X..###', 'X.####', 'X..###', 'X...##', 'X....X'],
@@ -661,6 +709,30 @@ var THEMES = {
     home: pal(.13, .015, 265, 'oklch(.98 .01 100)', 'oklch(.92 .24 128)', 'oklch(.7 .26 0)', 'oklch(.92 .24 128)', '#000'),
     apps: pal(.16, .05, 45, 'oklch(.97 .06 70)', 'oklch(.78 .2 50)', 'oklch(.75 .15 220)', 'oklch(.78 .2 50)', '#000'),
     sys: pal(.15, .045, 165, 'oklch(.96 .09 170)', 'oklch(.88 .17 170)', 'oklch(.7 .27 0)', 'oklch(.78 .2 40)', '#000') },
+  marathon: { n: 'graphite, acid green, magenta',
+    home: pal(.16, .01, 270, 'oklch(.97 .01 110)', 'oklch(.92 .25 128)', 'oklch(.65 .29 345)', 'oklch(.92 .25 128)', '#000'),
+    apps: pal(.9, .24, 128, 'oklch(.1 0 0)', 'oklch(.55 .3 345)', 'oklch(.55 .3 345)', 'oklch(.1 0 0)', 'oklch(.92 .25 128)'),
+    sys: pal(.6, .29, 345, 'oklch(1 0 0)', 'oklch(.92 .25 128)', 'oklch(.1 0 0)', 'oklch(.1 0 0)', '#fff') },
+  riso: { n: 'light. paper, fluoro pink, riso blue',
+    home: pal(.95, .03, 85, 'oklch(.38 .2 262)', 'oklch(.65 .27 5)', 'oklch(.65 .27 5)', 'oklch(.65 .27 5)', '#fff'),
+    apps: pal(.7, .24, 5, 'oklch(.25 .17 262)', 'oklch(.99 .01 90)', 'oklch(.25 .17 262)', 'oklch(.38 .2 262)', '#fff'),
+    sys: pal(.92, .17, 102, 'oklch(.32 .19 262)', 'oklch(.62 .27 5)', 'oklch(.62 .27 5)', 'oklch(.38 .2 262)', '#fff') },
+  phosphor: { n: 'dark. crt green, amber, cyan',
+    home: pal(.12, .02, 150, 'oklch(.88 .22 145)', 'oklch(.97 .05 145)', 'oklch(.8 .17 75)', 'oklch(.88 .22 145)', '#000'),
+    apps: pal(.13, .025, 70, 'oklch(.84 .17 75)', 'oklch(.97 .05 90)', 'oklch(.88 .22 145)', 'oklch(.84 .17 75)', '#000'),
+    sys: pal(.12, .025, 220, 'oklch(.86 .14 205)', 'oklch(.97 .03 200)', 'oklch(.8 .17 75)', 'oklch(.86 .14 205)', '#000') },
+  ocean: { n: 'navy, teal, sky',
+    home: pal(.24, .1, 258, 'oklch(.97 .02 220)', 'oklch(.85 .15 195)', 'oklch(.75 .18 50)', 'oklch(.85 .15 195)', 'oklch(.15 .05 258)'),
+    apps: pal(.58, .12, 200, 'oklch(.13 .05 258)', 'oklch(.98 .02 200)', 'oklch(.75 .18 50)', 'oklch(.24 .1 258)', '#fff'),
+    sys: pal(.88, .08, 225, 'oklch(.2 .1 258)', 'oklch(.55 .2 35)', 'oklch(.55 .2 35)', 'oklch(.24 .1 258)', '#fff') },
+  candy: { n: 'cherry, sky, lemon',
+    home: pal(.57, .23, 25, 'oklch(1 0 0)', 'oklch(.93 .19 100)', 'oklch(.1 0 0)', 'oklch(.93 .19 100)', 'oklch(.12 0 0)'),
+    apps: pal(.83, .13, 220, 'oklch(.15 .06 260)', 'oklch(.55 .23 25)', 'oklch(.55 .23 25)', 'oklch(.55 .23 25)', '#fff'),
+    sys: pal(.93, .19, 100, 'oklch(.35 .17 25)', 'oklch(.45 .2 260)', 'oklch(.55 .23 25)', 'oklch(.45 .2 260)', '#fff') },
+  forest: { n: 'pine, moss, rust',
+    home: pal(.28, .07, 152, 'oklch(.96 .03 95)', 'oklch(.82 .16 85)', 'oklch(.65 .17 40)', 'oklch(.82 .16 85)', 'oklch(.15 0 0)'),
+    apps: pal(.66, .13, 128, 'oklch(.13 .03 150)', 'oklch(.97 .03 95)', 'oklch(.5 .17 40)', 'oklch(.28 .07 152)', '#fff'),
+    sys: pal(.53, .16, 42, 'oklch(.97 .03 90)', 'oklch(.85 .15 90)', 'oklch(.15 .03 150)', 'oklch(.28 .07 152)', '#fff') },
   acid: { n: 'loud. hot pink, cyan, lime',
     home: pal(.6, .3, 355, 'oklch(1 0 0)', 'oklch(.94 .24 125)', 'oklch(.1 0 0)', 'oklch(.92 .16 195)', 'oklch(.1 0 0)'),
     apps: pal(.86, .16, 200, 'oklch(.1 .03 260)', 'oklch(.58 .3 355)', 'oklch(.58 .3 355)', 'oklch(.58 .3 355)', '#fff'),
@@ -835,7 +907,7 @@ function renderHome() {
   hg.innerHTML = items.map(function (it, i) {
     if (it.f) {
       var ks = it.apps.filter(function (k) { return BYKEY.has(k); });
-      return '<button type="button" class="card tile fold" data-f="' + i + '"><span class="fico">' + ks.slice(0, 4).map(function (k) { return '<span class="ico" data-ik="' + esc(k) + '"></span>'; }).join('') + '</span><span class="nm">' + esc(it.f) + '</span><i class="nd"></i></button>';
+      return '<button type="button" class="card tile fold" data-f="' + i + '"><span class="fico">' + ks.slice(0, 4).map(function (k) { return '<span class="ico" data-ik="' + esc(k) + '"></span>'; }).join('') + '</span><span class="nm">' + esc(it.f) + '<b class="sl">/</b></span><span class="fc">' + pad(ks.length) + '</span><i class="nd"></i></button>';
     }
     var a = BYKEY.get(it.k); return a ? tileHTML(a, ' data-hi="' + i + '"') : '';
   }).join('') || '<div class="home-empty">open apps (swipe up) and hold one // pin to home</div>';
@@ -874,6 +946,43 @@ $('#fo-ungroup').addEventListener('click', function () { var h = homeItems(), f 
   h.splice.apply(h, [FO.i, 1].concat(ks)); folderEl.hidden = true; FO.i = -1; saveHome(h); log('home // folder ungrouped'); });
 document.addEventListener('click', function (e) { var t = e.target.closest('[data-f]'); if (!t || !booted) return; API.haptic('key'); flash(t); openFolder(+t.dataset.f); });
 
+/* ---------- view: grid of tiles or a list of names. applies to home, apps and folders ---------- */
+function applyView() { if (SET.view === 'list') R.dataset.view = 'list'; else delete R.dataset.view; $('#view-t').innerHTML = sym(SET.view === 'list' ? 'apps' : 'rows', { cell: 2.2, gap: .1 }); }
+$('#view-t').addEventListener('click', function (e) { e.preventDefault(); API.haptic('tick'); SET.view = SET.view === 'list' ? 'grid' : 'list'; saveSet(); applyView(); log('view // ' + SET.view); });
+
+/* ---------- select several apps, then make a folder / add to one / pin them ---------- */
+var SEL = { on: false, keys: [], target: null }, selbar = $('#selbar');
+function enterSelect(k, target) {
+  SEL.on = true; SEL.keys = k ? [k] : []; SEL.target = target == null ? null : target; R.dataset.sel = '1';
+  closeSheet(); if (folderOpen()) { folderEl.hidden = true; FO.i = -1; }
+  if (current !== 'apps') go('apps', { keepSel: true }); clearFind();
+  var f = SEL.target != null ? homeItems()[SEL.target] : null;
+  $('#sb-name').hidden = !!f; $('#sb-name').value = ''; $('#sb-to').textContent = f ? '→ ' + f.f + '/' : '';
+  $('#sb-make').textContent = f ? 'Add to ' + f.f + '/' : 'Make folder';
+  selbar.hidden = false; markSel(); log('select // tap apps to pick');
+}
+function exitSelect() { if (!SEL.on) return; SEL.on = false; SEL.keys = []; SEL.target = null; delete R.dataset.sel; selbar.hidden = true; markSel(); }
+function toggleSel(k) { var i = SEL.keys.indexOf(k); if (i > -1) SEL.keys.splice(i, 1); else SEL.keys.push(k); markSel(); }
+function markSel() { $$('#grid [data-k]').forEach(function (c) { c.classList.toggle('sel', SEL.on && SEL.keys.indexOf(c.dataset.k) > -1); }); $('#sb-n').textContent = pad(SEL.keys.length); }
+selbar.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-s]'); if (!b) return; API.haptic('key'); var act = b.dataset.s;
+  if (act === 'cancel') return exitSelect();
+  if (!SEL.keys.length) { flash(b); log('select // pick at least one app', true); return; }
+  var h = homeItems(), ks = SEL.keys.slice(), first = -1, tObj = SEL.target != null ? h[SEL.target] : null;
+  if (act === 'pin') { ks.forEach(function (k) { if (homeIndex(k) < 0 && folderOf(k) < 0 && h.length < HOMEMAX) h.push({ k: k }); }); saveHome(h); log('home // pinned ' + ks.length + ' apps'); }
+  else {
+    for (var i = h.length - 1; i >= 0; i--) if (h[i].k && ks.indexOf(h[i].k) > -1) { first = i; h.splice(i, 1); }
+    var target = tObj && tObj.f ? h.indexOf(tObj) : -1;
+    if (target > -1) { ks.forEach(function (k) { if (h[target].apps.indexOf(k) < 0) h[target].apps.push(k); }); log('home // ' + ks.length + ' apps → ' + h[target].f + '/'); }
+    else { var nm = ($('#sb-name').value || '').trim() || 'Folder', nf = { f: nm.slice(0, 18), apps: ks }; if (first > -1) h.splice(Math.min(first, h.length), 0, nf); else h.push(nf); log('home // folder ' + nf.f + '/ made'); }
+    saveHome(h);
+  }
+  exitSelect(); go('home', { from: b });
+});
+$('#sb-name').addEventListener('focus', function () { API.keyboard(); });
+$('#sb-name').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); } });
+$('#fo-add').addEventListener('click', function () { var i = FO.i; API.haptic('key'); enterSelect(null, i); });
+
 /* recents + launching */
 function renderRecent() {
   var r = store.get('jrl-recent', []).map(function (k) { return BYKEY.get(k); }).filter(Boolean).slice(0, 6);
@@ -893,11 +1002,13 @@ var press = null;
 document.addEventListener('pointerdown', function (e) {
   var c = e.target.closest('[data-k]'); if (!c || e.target.closest('#term') || !$('#sheet').hidden || !booted) return;
   press = { c: c, x: e.clientX, y: e.clientY, long: false };
+  if (SEL.on && c.closest('#grid')) return;
   press.t = setTimeout(function () { if (!press) return; press.long = true; c.classList.add('hold'); API.haptic('long'); openSheet(BYKEY.get(c.dataset.k), c); }, 460);
 }, true);
 document.addEventListener('pointermove', function (e) { if (press && !press.long && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 10) { clearTimeout(press.t); press = null; } }, true);
 document.addEventListener('pointerup', function () {
   if (!press) return; clearTimeout(press.t); var p = press; press = null; if (p.long) return;
+  if (SEL.on && p.c.closest('#grid')) { API.haptic('tick'); toggleSel(p.c.dataset.k); return; }
   var a = BYKEY.get(p.c.dataset.k); if (a) { if (p.c.dataset.fi != null) setTimeout(closeFolder, 300); launch(a, p.c); if (current === 'apps') setTimeout(clearFind, 400); }
 }, true);
 document.addEventListener('pointercancel', function () { if (press) { clearTimeout(press.t); if (!press.long) press.c.classList.remove('hold'); press = null; } }, true);
@@ -914,6 +1025,7 @@ function sheetActions() {
   else if (hi > -1) { h += shBtn('unpin', 'Remove from home', '−'); if (c.hi != null) { h += shBtn('left', 'Move earlier', '◂'); h += shBtn('right', 'Move later', '▸'); } }
   else if (folderOf(a.key) < 0) h += shBtn('pin', 'Pin to home', '+');
   if (c.fi == null) h += shBtn('folder', 'Put in a folder', '▦');
+  if (c.fi == null && c.hi == null) h += shBtn('multi', 'Select several', '☐');
   h += shBtn('hide', isHidden(a.key) ? 'Show in apps' : 'Hide from apps', '◌');
   h += shBtn('info', 'App info', 'i');
   h += shBtn('uninstall', 'Uninstall', '×', 'alt');
@@ -924,6 +1036,7 @@ function folderChooser() {
   var h = homeItems(), out = '';
   h.forEach(function (it, i) { if (it.f) out += shBtn('into:' + i, it.f, pad(it.apps.length)); });
   out += '<div class="newf"><input id="newf" maxlength="18" placeholder="NEW FOLDER NAME" autocomplete="off" spellcheck="false"><button type="button" data-a="mkf">Make</button></div>';
+  out += shBtn('multi', 'Pick several apps for a new folder', '☐');
   out += shBtn('back', 'Back', '◂');
   $('#sh-acts').innerHTML = out;
 }
@@ -939,6 +1052,7 @@ $('#sh-acts').addEventListener('click', function (e) {
   var b = e.target.closest('button[data-a]'); if (!b) return; var a = sheetApp, act = b.dataset.a, c = sheetCtx; if (!a) return closeSheet();
   API.haptic('key');
   if (act === 'folder') return folderChooser();
+  if (act === 'multi') return enterSelect(a.key, null);
   if (act === 'back') return sheetActions();
   if (act === 'mkf') { var nm = ($('#newf').value || '').trim() || 'Folder'; addToFolder(a, null, nm); return closeSheet(); }
   if (act.indexOf('into:') === 0) { addToFolder(a, +act.slice(5)); return closeSheet(); }
@@ -1145,7 +1259,7 @@ function go(mod, o) {
   var oc = getComputedStyle(stage).backgroundColor, reform = kind === 'construct';
   current = mod; R.dataset.field = mod; applyPal(); syncBars();
   $('#pager').querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.m === mod); });
-  var D = !can ? 0 : kind === 'bands' ? 120 : 0, panel = null; if (mod !== 'apps') clearFind();
+  var D = !can ? 0 : kind === 'bands' ? 120 : 0, panel = null; if (mod !== 'apps') { clearFind(); exitSelect(); } else if (!o.keepSel) exitSelect();
   $$('.mpanel').forEach(function (p) {
     var on = p.dataset.panel === mod; p.classList.toggle('on', on); p.setAttribute('aria-hidden', !on);
     if (on) { panel = p; p.style.animation = 'none'; void p.offsetWidth; p.style.animation = reform ? 'none' : ''; p.style.animationDelay = D + 'ms'; }
@@ -1557,8 +1671,8 @@ var TC = {
     var G2 = [['apps', 'ls · open X · info X · pin X · unpin X · home · recent · hide X · unhide X · hidden · uninstall X · N'],
       ['phone', 'settings [wifi|bt|display|sound|battery|launcher|notif|wallpaper] · shade · notif · battery'],
       ['web', 'web QUERY · url ADDRESS'],
-      ['shell', 'calm on|off · help · clear · history · date · uptime · whoami · echo · fortune · go home|apps|sys · update · version · reboot · exit']];
-    G2.push(isRoot ? ['root', 'theme jrl|paper|pastel|bauhaus|mono|night|acid · set pace fast|normal|slow · set dots on|off · set ripple on|off · set fx|decode|breathe|boot always|smart|off|icons app|mosaic|pixel · field [N|next] · color · chaos on|off · invert on|off · neofetch · banner · hack X · rm -rf / · logout']
+      ['shell', 'view list|grid · calm on|off · help · clear · history · date · uptime · whoami · echo · fortune · go home|apps|sys · update · version · reboot · exit']];
+    G2.push(isRoot ? ['root', 'theme list|next|NAME · set pace fast|normal|slow · set dots on|off · set ripple on|off · set fx|decode|breathe|boot always|smart|off|icons app|mosaic|pixel · field [N|next] · color · chaos on|off · invert on|off · neofetch · banner · hack X · rm -rf / · logout']
                    : ['root', "~  (escalate. there's more behind it)"]);
     G2.forEach(function (g) { tline('<span class="ti">' + g[0] + '</span> ' + esc(g[1])); });
   },
@@ -1629,6 +1743,7 @@ var TC = {
     var n = a && /^\d+$/.test(a) ? parseInt(a, 10) - 1 : (SET.pal + 1) % HOMEPAL.length; if (!HOMEPAL[n]) return terr('field: 1-' + HOMEPAL.length + ' | next | list');
     SET.pal = n; SET.theme = 'jrl'; saveSet(); applyPal(); ttxt('home field ' + pad(n + 1) + ' // ' + HOMEPAL[n].n, 'tb');
   },
+  view: function (a) { a = (a || '').toLowerCase(); if (a !== 'list' && a !== 'grid') a = SET.view === 'list' ? 'grid' : 'list'; SET.view = a; saveSet(); applyView(); ttxt('view: ' + a, 'tb'); },
   calm: function (a) { var off = a !== 'off'; SET.dots = SET.ripple = !off; saveSet(); if (off) { R.dataset.nodots = '1'; fieldStop(); } else { delete R.dataset.nodots; fieldStart(); } ttxt(off ? 'calm. no background dots, no ripples. `calm off` to bring them back.' : 'dots and ripples back.', 'tb'); },
   theme: function (a) {
     a = (a || '').toLowerCase();
@@ -1687,6 +1802,7 @@ function trun(v) {
 /* ---------- native events (Kotlin calls JRLnative.event) ---------- */
 function onBack() {
   if (sheetOpen()) return closeSheet();
+  if (SEL.on) return exitSelect();
   if (folderOpen()) return closeFolder();
   if (termOpen()) return closeTerm();
   if (current === 'apps' && find.value) return clearFind();
@@ -1726,6 +1842,7 @@ document.addEventListener('keydown', function (e) {
 DEV = API.device() || {}; DEVT = performance.now();
 if (SET.breathe === false) R.dataset.nobreathe = '1';
 if (SET.dots === false) R.dataset.nodots = '1';
+applyView();
 loadApps(); poll(); tick(); renderPager(); applyPal(); refreshSys(); pollAgenda(); pollMedia();
 $('#mname').textContent = modName();
 var bootNow = SET.boot === 'always' || (SET.boot !== 'off' && ((DEV.uptime && DEV.uptime < 600) || store.get('jrl-uiv', '') !== UIV));

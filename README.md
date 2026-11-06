@@ -1,5 +1,7 @@
 # JRL Launcher
 
+**→ [Field manual: how to use it, every command, themes, easter eggs](docs/GUIDE.md)**
+
 An Android home screen in the JERE//LEVANCE graphic-realism style. A thin Kotlin shell registers as the
 HOME app and hosts one full-screen WebView running `app/src/main/assets/www/index.html`; a JavaScript
 bridge (`window.JRLAndroid`) gives the page the app list, icons, launching, battery, notification counts,
