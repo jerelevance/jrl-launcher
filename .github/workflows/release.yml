@@ -1,0 +1,33 @@
+name: Publish wallpapers
+
+on:
+  push:
+    branches: [wallpapers]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: zip -q jrl-wallpapers.zip *.mp4 *.png
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: wallpapers-v1
+          name: "Wallpapers v1 · Fold7 lock screens"
+          make_latest: false
+          body: |
+            Lock-screen loops and stills for the Galaxy Z Fold7. Files ending in **-cover** fit the outside screen (1080×2520); **-inner** fits the unfolded screen (1968×2184).
+
+            **Loops** (12 s, seamless): `jrl-field`, `jrl-glitch`, `jrl-breathe`
+            **Stills:** one per launcher theme, plus `jrl-boot`
+            **Everything at once:** `jrl-wallpapers.zip`
+
+            Set: tap a file › download › Gallery › ⋮ › *Set as wallpaper* › *Lock screen*. Use the cover version folded and the inner version unfolded.
+          files: |
+            *.mp4
+            *.png
+            jrl-wallpapers.zip
