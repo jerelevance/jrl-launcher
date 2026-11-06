@@ -944,7 +944,18 @@ function openFolder(i) {
   paintAll($('#fo-grid')); markNtf();
 }
 function closeFolder() { if (folderEl.hidden) return; var v = $('#fo-name').value.trim(), h = homeItems(); if (h[FO.i] && h[FO.i].f && v && v !== h[FO.i].f) { h[FO.i].f = v.slice(0, 18); saveHome(h); } folderEl.hidden = true; FO.i = -1; }
-folderEl.querySelector('.back').addEventListener('pointerdown', function (e) { e.stopPropagation(); closeFolder(); });
+/* a tap that closes an overlay is used up: its pointerup and click never reach what was underneath */
+var EAT = { on: false, t: 0 };
+function eatTap() { EAT.on = true; clearTimeout(EAT.t); EAT.t = setTimeout(function () { EAT.on = false; }, 1500); }
+['pointerup', 'click', 'contextmenu'].forEach(function (ev) {
+  window.addEventListener(ev, function (e) {
+    if (!EAT.on) return; e.stopPropagation(); e.preventDefault();
+    if (ev === 'pointerup') { clearTimeout(EAT.t); EAT.t = setTimeout(function () { EAT.on = false; }, 350); }
+    if (ev === 'click') { clearTimeout(EAT.t); EAT.on = false; }
+  }, true);
+});
+window.addEventListener('pointercancel', function () { if (EAT.on) { clearTimeout(EAT.t); EAT.t = setTimeout(function () { EAT.on = false; }, 350); } }, true);
+folderEl.querySelector('.back').addEventListener('pointerdown', function (e) { e.stopPropagation(); e.preventDefault(); eatTap(); closeFolder(); });
 $('#fo-close').addEventListener('click', closeFolder);
 $('#fo-name').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); } });
 $('#fo-ungroup').addEventListener('click', function () { var h = homeItems(), f = h[FO.i]; if (!f) return; var ks = f.apps.filter(function (k) { return homeIndex(k) < 0; }).map(function (k) { return { k: k }; });
@@ -1052,7 +1063,7 @@ function openSheet(a, el) {
   var n = NTF.pkgs && NTF.pkgs[a.pkg]; $('#sh-ntf').hidden = !n; if (n) $('#sh-ntf').textContent = n + ' pending';
 }
 function closeSheet() { if (sheet.hidden) return; sheet.hidden = true; sheetApp = null; $$('.hold').forEach(function (c) { c.classList.remove('hold'); }); }
-sheet.querySelector('.back').addEventListener('pointerdown', function (e) { e.stopPropagation(); closeSheet(); });
+sheet.querySelector('.back').addEventListener('pointerdown', function (e) { e.stopPropagation(); e.preventDefault(); eatTap(); closeSheet(); });
 $('#sh-acts').addEventListener('click', function (e) {
   var b = e.target.closest('button[data-a]'); if (!b) return; var a = sheetApp, act = b.dataset.a, c = sheetCtx; if (!a) return closeSheet();
   API.haptic('key');
