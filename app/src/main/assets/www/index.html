@@ -125,15 +125,45 @@ p{margin:0}
 .chip{border:1.5px solid var(--ink);padding:5px 10px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;position:relative;overflow:hidden;transition:background .12s,color .12s}
 .chip:active{background:var(--hl);color:var(--onhl);border-color:var(--hl)}
 
-/* home */
-.home{justify-content:space-between}
-.h-clock{align-self:flex-start;max-width:100%}
-#clock{font-family:var(--dot);font-weight:900;font-size:min(30vw,150px);line-height:.84;letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap;margin:8px 0 6px -.04em}
+/* home: clock strip, agenda, now playing, then the app grid sitting low where the thumb is */
+.home{gap:10px}
+.h-clock{display:flex;align-items:flex-end;gap:14px;min-width:0}
+#clock{font-family:var(--dot);font-weight:900;font-size:min(21vw,96px);line-height:.8;letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap;margin-left:-.04em}
 #clock .col{animation:blink 2s steps(2,jump-none) infinite}
-.h-sub{display:flex;gap:14px;align-items:baseline;font-size:10px;letter-spacing:.18em;text-transform:uppercase}
-#c-s{font-family:var(--dot);font-weight:900;font-size:24px;letter-spacing:.02em;color:var(--acc);min-width:1.4em}
-.hours{display:flex;gap:3px;margin-top:12px}
-.hours i{width:9px;height:9px;border-radius:50%;background:var(--ink);opacity:.22}
+.h-side{display:grid;gap:5px;min-width:0;padding-bottom:2px;overflow:hidden}
+#c-date{font-family:var(--display);font-stretch:125%;font-weight:900;font-size:17px;line-height:1;text-transform:uppercase;white-space:nowrap}
+.h-side .lbl{white-space:nowrap;font-variant-numeric:tabular-nums}
+#c-s{color:var(--acc)}
+.hours{display:flex;gap:2px;margin-top:2px}
+.hours{flex-wrap:wrap;max-width:118px}
+.hours i{width:4px;height:4px;border-radius:50%;background:var(--ink);opacity:.22}
+.home .pn{background:var(--fsel)}
+.agenda .ph{width:100%;text-align:left}
+.agenda .ph:active{background:var(--hl);color:var(--onhl)}
+.ag-list{display:grid;gap:2px;padding:6px}
+.ev{display:grid;grid-template-columns:48px 44px minmax(0,1fr);gap:8px;align-items:baseline;padding:7px 8px;background:var(--row);text-align:left;transition:background .12s,color .12s;position:relative;overflow:hidden}
+.ev .d{font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+.ev .t{font-family:var(--dot);font-weight:900;font-size:13px;letter-spacing:.02em}
+.ev b{font-weight:500;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev.now{background:var(--acc);color:var(--fsel)}.ev.now .d{color:var(--fsel)}
+.ev:active{background:var(--hl);color:var(--onhl)}
+.ag-empty{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.np{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px 6px 6px 10px}
+.np-eq{display:flex;gap:2px;align-items:flex-end;height:22px}
+.np-eq i{width:4px;height:4px;border-radius:50%;background:var(--acc);box-shadow:0 -6px 0 var(--acc),0 -12px 0 var(--acc);opacity:.35}
+.np.on .np-eq i{opacity:1;animation:npq .9s steps(3,end) infinite alternate}
+.np.on .np-eq i:nth-child(2n){animation-duration:.7s}.np.on .np-eq i:nth-child(3n){animation-duration:1.1s}
+@keyframes npq{0%{box-shadow:0 -6px 0 transparent,0 -12px 0 transparent}50%{box-shadow:0 -6px 0 var(--acc),0 -12px 0 transparent}100%{box-shadow:0 -6px 0 var(--acc),0 -12px 0 var(--acc)}}
+.np-t{display:grid;min-width:0;text-align:left;line-height:1.25}
+.np-t b{font-weight:700;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.np-t span{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.np-c{display:flex;gap:4px}
+.np-c button{width:36px;height:36px;border:1.5px solid var(--rule);font-size:11px;letter-spacing:-.1em;transition:background .12s,color .12s}
+.np-c button:active{background:var(--hl);color:var(--onhl);border-color:var(--hl)}
+.hgrid{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;align-content:end;container-type:inline-size;touch-action:none}
+.hgrid::-webkit-scrollbar{display:none}
+.hgrid .tile{height:calc((100cqw - 18px) / 4)}
+.home-empty{grid-column:1/-1;border:1.5px dashed var(--rule);padding:18px;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);text-align:center}
 .hours i.on{opacity:1}
 .hours i.now{border-radius:0;background:var(--acc);opacity:1;animation:dotw 1.6s steps(2,jump-none) infinite}
 .h-tel{align-self:flex-end;width:min(200px,58%)}
@@ -164,15 +194,35 @@ p{margin:0}
 .card.mini .ico{grid-row:1;width:30px;height:30px;align-self:center}
 .card.mini .nm{grid-row:2;font-family:var(--mono);font-weight:500;font-stretch:100%;font-size:8px;letter-spacing:.1em;-webkit-line-clamp:1;text-align:center;max-width:100%}
 .card.mini .nd{right:5px;top:5px;bottom:auto}
+/* tiles: icon first, small label. used on home, in folders and in the drawer */
+.card.tile{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;justify-items:center;padding:6px 4px 5px;gap:3px;touch-action:pan-y}
+.hgrid .card.tile{touch-action:none}
+.card.tile .ico{grid-column:1;grid-row:1;width:min(46px,62%);height:auto;aspect-ratio:1;align-self:center}
+.card.tile .nm{grid-column:1;grid-row:2;font-family:var(--mono);font-weight:500;font-stretch:100%;font-size:8.5px;letter-spacing:.06em;line-height:1.15;-webkit-line-clamp:1;text-align:center;max-width:100%;text-transform:uppercase}
+.card.tile .nd{right:5px;top:5px;bottom:auto}
+.card.fold .fico{grid-row:1;width:min(48px,66%);aspect-ratio:1;align-self:center;display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:3px;border:1.5px solid var(--ink)}
+.card.fold .fico .ico{width:100%;height:100%}
+.card.hide-x{display:none}
+.ico img{width:100%;height:100%;display:block;object-fit:contain}
+.ico.real img,.ico.mos img{border-radius:22%}
+.ico.mos img{image-rendering:pixelated}
 .ico.px{background:currentColor;-webkit-mask:center/contain no-repeat;mask:center/contain no-repeat}
 .ico.real img{width:100%;height:100%;display:block;object-fit:contain}
 .ico .sym{width:100%;height:100%}
 
 /* apps module */
+.findbar{display:flex;align-items:center;gap:8px;height:40px;padding:0 4px 0 10px;border:1.5px solid var(--ink);margin-bottom:8px;cursor:text}
+.findbar .u{font-weight:700;color:var(--ink)}
+#find{flex:1;min-width:0;background:transparent;border:0;outline:0;font:inherit;font-size:13px;color:var(--ink);caret-color:var(--ink)}
+#find::placeholder{color:var(--dim);font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+#find-x{width:32px;height:32px;font-size:18px}
+.findbar:focus-within{background:var(--row)}
 .gridwrap{position:relative;flex:1;min-height:0;container-type:inline-size}
 .grid{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;scrollbar-width:none;
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:calc((100cqw - 40px) / 3);gap:6px;align-content:start;padding:0 28px 22px 0}
-.grid .card{aspect-ratio:auto;height:100%}
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;align-content:start;padding:0 28px 22px 0}
+.grid .card{aspect-ratio:auto;height:calc((100cqw - 43px) / 4)}
+.lh{height:calc((100cqw - 43px) / 4);font-family:var(--dot);font-weight:900;font-size:clamp(30px,10cqw,46px);line-height:1;display:grid;place-items:center;border:1.5px dashed var(--rule);color:var(--dim)}
+.grid.finding .lh{display:none}
 .grid::-webkit-scrollbar{display:none}
 .az{position:absolute;right:0;top:0;bottom:22px;width:22px;display:flex;flex-direction:column;justify-content:space-between;align-items:center;touch-action:none;
   font-family:var(--dot);font-weight:900;font-size:11px;line-height:1;color:var(--dim);padding:2px 0}
@@ -238,6 +288,25 @@ p{margin:0}
 .sh-acts button:active{background:var(--hl);color:var(--onhl)}
 .sh-acts button i{font-style:normal;font-family:var(--dot);font-weight:900;font-size:13px;color:var(--dim)}
 .sh-acts button:active i{color:var(--onhl)}
+
+.sh-acts .alt{color:var(--warn)}
+.sh-acts .newf{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--rule)}
+.sh-acts .newf input{flex:1;min-width:0;background:transparent;border:1.5px solid var(--ink);padding:8px 10px;font:inherit;font-size:13px;color:var(--ink);outline:0}
+.sh-acts .newf button{width:auto;padding:0 14px;border:1.5px solid var(--ink);border-bottom-width:1.5px}
+
+/* folder */
+#folder{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;justify-content:center}
+#folder .back{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.5) 0 2px,rgba(0,0,0,.18) 2px 4px)}
+.sh.fo{margin:0 calc(var(--sar) + 14px) 0 calc(var(--sal) + 14px)}
+.fo-h{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--rule)}
+#fo-name{flex:1;min-width:0;background:transparent;border:0;border-bottom:1.5px dashed var(--rule);outline:0;font-family:var(--display);font-stretch:125%;font-weight:900;font-size:24px;line-height:1.1;text-transform:uppercase;color:var(--ink);padding:2px 0}
+#fo-name:focus{border-bottom-color:var(--acc)}
+.fo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:10px;container-type:inline-size;max-height:56vh;overflow-y:auto}
+.fo-grid .tile{height:calc((100cqw - 15px) / 4)}
+.fo-f{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule)}
+.fo-f button{padding:14px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;transition:background .12s,color .12s}
+.fo-f button+button{border-left:1px solid var(--rule)}
+.fo-f button:active{background:var(--hl);color:var(--onhl)}
 
 /* ===== boot ===== */
 #boot{position:absolute;inset:0;z-index:60;--ink:oklch(.98 0 0);--acc:oklch(.88 .26 142);background:oklch(.46 .29 266);color:var(--ink);
@@ -335,24 +404,23 @@ html.inv .stage{filter:invert(1) hue-rotate(180deg)}
 
   <section class="mpanel home on" data-panel="home">
     <div class="h-clock blk" data-blk="Clock">
-      <span class="lbl" data-dec>Local time // <span id="c-tz">ET</span></span>
       <div id="clock"><span id="c-h">00</span><span class="col">:</span><span id="c-m">00</span></div>
-      <div class="h-sub"><span id="c-s">00</span><span id="c-date">---</span><span id="c-wk" class="lbl">WK --</span></div>
-      <div class="hours" id="hours" aria-hidden="true"></div>
-    </div>
-    <div class="h-tel pn blk" data-blk="Telemetry">
-      <div class="ph"><span data-dec>Telemetry</span><span>live</span></div>
-      <div class="pb tel">
-        <div class="r"><span>Bat</span><b id="h-bat">--</b><div class="batpx" id="h-batpx"></div></div>
-        <div class="r"><span>Ntf</span><b id="h-ntf">--</b></div>
-        <div class="r"><span>Pkg</span><b id="h-pkg">000</b></div>
-        <div class="r"><span>Up</span><b id="h-up">--</b></div>
+      <div class="h-side">
+        <span id="c-date">---</span>
+        <span class="lbl"><span id="c-s">00</span> · <span id="c-wk">WK --</span> · <span id="c-tz">ET</span></span>
+        <div class="hours" id="hours" aria-hidden="true"></div>
       </div>
     </div>
-    <div class="dockwrap blk" data-blk="Dock">
-      <span class="lbl"><span data-dec>Dock</span><span id="dock-n">00/05</span></span>
-      <div class="dock" id="dock"></div>
+    <div class="agenda pn blk" data-blk="Agenda">
+      <button type="button" class="ph" id="ag-head"><span data-dec>Agenda // next 7 days</span><span id="ag-n">--</span></button>
+      <div class="ag-list" id="agenda"></div>
     </div>
+    <div class="np pn blk" data-blk="Now playing" id="np" hidden>
+      <button type="button" class="np-eq" id="np-open" aria-label="Open the player"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></button>
+      <button type="button" class="np-t" id="np-open2"><b id="np-title">—</b><span id="np-sub">—</span></button>
+      <span class="np-c"><button type="button" data-mc="prev" aria-label="Previous">◂◂</button><button type="button" data-mc="toggle" id="np-play" aria-label="Play or pause">❚❚</button><button type="button" data-mc="next" aria-label="Next">▸▸</button></span>
+    </div>
+    <div class="hgrid blk" data-blk="Home" id="hgrid"></div>
   </section>
 
   <section class="mpanel" data-panel="apps" aria-hidden="true">
@@ -360,6 +428,7 @@ html.inv .stage{filter:invert(1) hue-rotate(180deg)}
       <div class="ttl"><h2 id="t-apps">Apps</h2><span class="tag" id="apps-tag">000</span></div>
       <span class="lbl" id="apps-sub" data-dec="k">a→z // hold for options</span>
     </div>
+    <label class="findbar blk" data-blk="Find" for="find"><span class="u">find:</span><input id="find" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off" enterkeyhint="go" placeholder="type an app name" aria-label="Find an app"><button type="button" id="find-x" aria-label="Clear" hidden>×</button></label>
     <div class="gridwrap blk" data-blk="Packages">
       <div class="grid" id="grid"></div>
       <nav class="az" id="az" aria-label="Jump to letter"></nav>
@@ -377,13 +446,16 @@ html.inv .stage{filter:invert(1) hue-rotate(180deg)}
   <div class="back"></div>
   <div class="sh" role="dialog" aria-label="App options">
     <div class="sh-h"><span class="ico" id="sh-ico"></span><span id="sh-t"></span><span id="sh-p"></span><span id="sh-n"></span><span id="sh-ntf" hidden></span></div>
-    <div class="sh-acts">
-      <button type="button" data-a="open"><span>Open</span><i>↵</i></button>
-      <button type="button" data-a="pin" id="sh-pin"><span>Pin to dock</span><i>+</i></button>
-      <button type="button" data-a="info"><span>App info</span><i>i</i></button>
-      <button type="button" data-a="uninstall"><span>Uninstall</span><i>×</i></button>
-      <button type="button" data-a="cancel"><span>Cancel</span><i>esc</i></button>
-    </div>
+    <div class="sh-acts" id="sh-acts"></div>
+  </div>
+</div>
+
+<div id="folder" hidden>
+  <div class="back"></div>
+  <div class="sh fo" role="dialog" aria-label="Folder">
+    <div class="fo-h"><input id="fo-name" maxlength="18" aria-label="Folder name" autocomplete="off" spellcheck="false"><span class="lbl" id="fo-n">00</span></div>
+    <div class="fo-grid" id="fo-grid"></div>
+    <div class="fo-f"><button type="button" id="fo-ungroup">Ungroup</button><button type="button" id="fo-close">Close</button></div>
   </div>
 </div>
 
@@ -408,7 +480,10 @@ var pad = function (n) { return String(n).padStart(2, '0'); }, pad3 = function (
 var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
 var store = { get: function (k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
               set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
-var SET = Object.assign({ fx: '', decode: 1, breathe: true, boot: true, icons: 'pixel', pal: 0, tc: '' }, store.get('jrl-set', {}));
+var UIV = '0.2';
+var SET = Object.assign({ fx: '', decode: 1, breathe: true, boot: 'smart', icons: 'app', pal: 0, tc: '', labels: true }, store.get('jrl-set', {}));
+if (SET.boot === true) SET.boot = 'smart'; if (SET.boot === false) SET.boot = 'off';
+if (store.get('jrl-uiv', '') !== UIV && SET.icons === 'pixel' && !store.get('jrl-iconpick', false)) SET.icons = 'app';
 function saveSet() { store.set('jrl-set', SET); }
 var rnd = function (a, b) { return a + Math.random() * (b - a); };
 function pick(list, last) { var l = list.filter(function (x) { return x !== last; }); return l[Math.floor(Math.random() * l.length)]; }
@@ -434,7 +509,13 @@ var MOCK = (function () {
     haptic: function () {}, expand: function () { log('preview // notification shade'); },
     settings: function (w) { log('preview // settings ' + (w || 'main')); return true; },
     webSearch: function (q) { window.open('https://duckduckgo.com/?q=' + encodeURIComponent(q), '_blank', 'noopener'); },
-    view: function (u) { window.open(u, '_blank', 'noopener'); }, bars: function () {}
+    view: function (u) { window.open(u, '_blank', 'noopener'); }, bars: function () {},
+    events: function () { var t = new Date(), at = function (dd, h, m) { var x = new Date(t.getFullYear(), t.getMonth(), t.getDate() + dd, h, m); return x.getTime(); };
+      return JSON.stringify({ perm: true, ev: [{ id: '1', title: 'Site walk, Naples', begin: at(1, 9, 30), end: at(1, 11, 0), allDay: false }, { id: '2', title: 'DC ACX Meetups Everywhere', begin: at(2, 17, 30), end: at(2, 20, 0), allDay: false }, { id: '3', title: 'Permit resubmittal due', begin: Date.UTC(t.getFullYear(), t.getMonth(), t.getDate() + 4), end: Date.UTC(t.getFullYear(), t.getMonth(), t.getDate() + 5), allDay: true }] }); },
+    askCalendar: function () {}, openEvent: function (id) { log('preview // open event ' + id); }, openCalendar: function () { log('preview // calendar'); },
+    media: function () { return JSON.stringify({ on: true, active: true, title: 'Windowlicker', artist: 'Aphex Twin', app: 'NTS', pkg: apps[0].pkg, playing: MOCK._p !== false }); },
+    mediaCmd: function (c) { if (c === 'toggle') MOCK._p = MOCK._p === false; log('preview // media ' + c); },
+    update: function () { setTimeout(function () { window.JRLnative.event('updated', '"same"'); }, 600); }, version: function () { return 0; }
   };
 })();
 var B = NB || MOCK;
@@ -453,6 +534,13 @@ var API = {
   web: function (q) { call(function () { B.webSearch(q); }); }, view: function (u) { call(function () { B.view(u); }); },
   bars: function (dark) { call(function () { B.bars(!!dark); }); },
   keyboard: function () { call(function () { if (NB) NB.keyboard(); }); },
+  events: function () { return call(function () { return JSON.parse(B.events(7)); }, { perm: false, ev: [], na: true }); },
+  askCalendar: function () { call(function () { B.askCalendar(); }); },
+  openEvent: function (id, begin) { call(function () { B.openEvent(String(id), String(begin)); }); },
+  openCalendar: function () { call(function () { B.openCalendar(); }); },
+  media: function () { return call(function () { return JSON.parse(B.media()); }, { on: false, na: true }); },
+  mediaCmd: function (c) { call(function () { B.mediaCmd(c); }); },
+  update: function () { return call(function () { B.update(); return true; }, false); },
   icon: function (a) { return NB ? '/icon/' + encodeURIComponent(a.key) : mockIcon(a); }
 };
 var MI = {};
@@ -563,21 +651,27 @@ function log(msg, hot) {
 
 /* ---------- apps ---------- */
 var APPS = [], BYKEY = new Map(), NTF = { on: false, count: -1, pkgs: {} }, BAT = { level: -1, charging: false }, DEV = {}, DEVT = performance.now();
+function hiddenSet() { return store.get('jrl-hidden', []); }
+function isHidden(k) { return hiddenSet().indexOf(k) > -1; }
 function loadApps() {
   var raw = API.apps(), seen = {};
   APPS = (Array.isArray(raw) ? raw : []).filter(function (a) { if (!a || !a.key || seen[a.key]) return false; seen[a.key] = 1; return true; })
     .map(function (a) { return { key: a.key, pkg: a.pkg || a.key.split('/')[0], label: String(a.label || a.pkg || '?').trim() || '?' }; });
   APPS.sort(function (a, b) { return a.label.localeCompare(b.label, undefined, { sensitivity: 'base' }); });
-  APPS.forEach(function (a, i) { a.n = i + 1; a.lo = a.label.toLowerCase(); var old = BYKEY.get(a.key); if (old) { a.ip = old.ip; a.img = old.img; a.mask = old.mask; } });
+  APPS.forEach(function (a, i) { a.n = i + 1; a.lo = a.label.toLowerCase(); var old = BYKEY.get(a.key); if (old) { a.ip = old.ip; a.img = old.img; a.mask = old.mask; a.mos = old.mos; } });
   BYKEY = new Map(APPS.map(function (a) { return [a.key, a]; }));
-  renderGrid(); renderAZ(); renderDock(); renderRecent();
-  $('#apps-tag').textContent = pad3(APPS.length); $('#h-pkg').textContent = pad3(APPS.length);
+  renderGrid(); renderAZ(); renderHome(); renderRecent();
+  $('#apps-tag').textContent = pad3(drawerApps().length);
 }
+function drawerApps() { var h = hiddenSet(); return APPS.filter(function (a) { return h.indexOf(a.key) < 0; }); }
 
-/* icons: the app's own icon, reduced to a 12x12 halftone of round and square pixels and used as a mask, so it takes the field's ink */
-var G = 12;
+/* icons. three looks, `set icons app|mosaic|pixel`:
+   app    = the real icon (default: colour and shape are how you find things fast)
+   mosaic = the icon re-drawn as a 16x16 grid of round pixels in its own colours
+   pixel  = 12x12 halftone in the field's ink (pure aesthetic, slowest to read) */
+var G = 12, GM = 16;
 function pixelize(img) {
-  var a = document.createElement('canvas'); a.width = a.height = 48; var ax = a.getContext('2d'); ax.imageSmoothingQuality = 'high'; ax.drawImage(img, 0, 0, 48, 48);
+  var a = document.createElement('canvas'); a.width = a.height = 64; var ax = a.getContext('2d'); ax.imageSmoothingQuality = 'high'; ax.drawImage(img, 0, 0, 64, 64);
   var c = document.createElement('canvas'); c.width = c.height = G; var x = c.getContext('2d', { willReadFrequently: true }); x.imageSmoothingQuality = 'high'; x.drawImage(a, 0, 0, G, G);
   var d = x.getImageData(0, 0, G, G).data, Lm = new Float32Array(G * G), Al = new Float32Array(G * G), sum = 0, n = 0;
   for (var i = 0; i < G * G; i++) { var al = d[i * 4 + 3] / 255, l = (.2126 * d[i * 4] + .7152 * d[i * 4 + 1] + .0722 * d[i * 4 + 2]) / 255; Al[i] = al; Lm[i] = l; if (al > .5) { sum += l; n++; } }
@@ -589,13 +683,22 @@ function pixelize(img) {
     var r = cs * .47 * (.42 + .58 * v); if (v > .7) sq.rect(cx - r, cy - r, r * 2, r * 2); else { dots.moveTo(cx + r, cy); dots.arc(cx, cy, r, 0, 6.2832); }
   }
   o.globalAlpha = .55; o.fill(faint); o.globalAlpha = 1; o.fill(dots); o.fill(sq);
-  return out.toDataURL();
+  /* mosaic: same idea, but every dot keeps the icon's colour at that spot */
+  var mc = document.createElement('canvas'); mc.width = mc.height = GM; var mx = mc.getContext('2d', { willReadFrequently: true }); mx.imageSmoothingQuality = 'high'; mx.drawImage(a, 0, 0, GM, GM);
+  var md = mx.getImageData(0, 0, GM, GM).data, mo = document.createElement('canvas'), MS = 160, mcs = MS / GM; mo.width = mo.height = MS; var mox = mo.getContext('2d');
+  for (var y = 0; y < GM; y++) for (var z = 0; z < GM; z++) {
+    var p = (y * GM + z) * 4; if (md[p + 3] < 90) continue;
+    mox.fillStyle = 'rgb(' + md[p] + ',' + md[p + 1] + ',' + md[p + 2] + ')'; var mcx = z * mcs + mcs / 2, mcy = y * mcs + mcs / 2, rr = mcs * .46;
+    var edge = (y > 0 && md[p - GM * 4 + 3] < 90) || (z > 0 && md[p - 4 + 3] < 90);
+    if (edge || (y + z) % 7 === 0) mox.fillRect(mcx - rr, mcy - rr, rr * 2, rr * 2); else { mox.beginPath(); mox.arc(mcx, mcy, rr, 0, 6.2832); mox.fill(); }
+  }
+  return { mask: out.toDataURL(), mos: mo.toDataURL() };
 }
 function iconLoad(a) {
   if (!a.ip) a.ip = new Promise(function (res) {
     var img = new Image(); img.decoding = 'async';
-    img.onload = function () { a.img = img; try { a.mask = pixelize(img); } catch (e) { a.mask = null; } res(a); };
-    img.onerror = function () { a.img = null; a.mask = null; res(a); };
+    img.onload = function () { a.img = img; try { var p = pixelize(img); a.mask = p.mask; a.mos = p.mos; } catch (e) { a.mask = a.mos = null; } res(a); };
+    img.onerror = function () { a.img = null; a.mask = a.mos = null; res(a); };
     img.src = API.icon(a);
   });
   return a.ip;
@@ -606,34 +709,58 @@ function paintIcon(h, a) {
     if (!h.isConnected) return;
     h.style.removeProperty('-webkit-mask-image'); h.style.removeProperty('mask-image');
     if (SET.icons === 'app' && a.img) { h.className = 'ico real'; h.innerHTML = '<img alt="" src="' + esc(a.img.src) + '">'; }
+    else if (SET.icons === 'mosaic' && a.mos) { h.className = 'ico mos'; h.innerHTML = '<img alt="" src="' + a.mos + '">'; }
     else if (a.mask) { h.className = 'ico px'; h.innerHTML = ''; h.style.setProperty('-webkit-mask-image', 'url("' + a.mask + '")'); h.style.setProperty('mask-image', 'url("' + a.mask + '")'); }
     else { h.className = 'ico gl'; h.innerHTML = sym(GLYF[hash(a.key) % GLYF.length], { cell: 4.4, gap: .12 }); }
   });
 }
-
-var grid = $('#grid'), io = null;
-function renderGrid() {
-  var st = grid.scrollTop;
-  grid.innerHTML = APPS.map(function (a) {
-    return '<button type="button" class="card" data-k="' + esc(a.key) + '"><span class="ico"></span><span class="no">' + pad3(a.n) + '</span><span class="nm">' + esc(a.label) + '</span><i class="nd"></i></button>';
-  }).join('');
-  if (io) io.disconnect();
-  io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (!e.isIntersecting) return; io.unobserve(e.target); paintIcon(e.target.querySelector('.ico'), BYKEY.get(e.target.dataset.k)); }); }, { root: grid, rootMargin: '240px 0px' });
-  grid.querySelectorAll('.card').forEach(function (c) { io.observe(c); });
-  grid.scrollTop = st; markNtf();
+function tileHTML(a, extra) {
+  return '<button type="button" class="card tile" data-k="' + esc(a.key) + '"' + (extra || '') + '><span class="ico"></span><span class="nm">' + esc(a.label) + '</span><i class="nd"></i></button>';
 }
-function markNtf() { $$('[data-k]').forEach(function (c) { var a = BYKEY.get(c.dataset.k); c.classList.toggle('ntf', !!(a && NTF.pkgs && NTF.pkgs[a.pkg])); }); }
+function paintAll(root) { root.querySelectorAll('[data-k] .ico').forEach(function (h) { paintIcon(h, BYKEY.get(h.parentNode.dataset.k)); }); }
+
+/* drawer: 4 columns, letter headers, a find bar on top */
+var grid = $('#grid'), io = null;
+function letterOf(a) { var c = a.label[0].toUpperCase(); return /[A-Z]/.test(c) ? c : '#'; }
+function renderGrid() {
+  var st = grid.scrollTop, last = '', h = '';
+  drawerApps().forEach(function (a) { var l = letterOf(a); if (l !== last) { last = l; h += '<div class="lh" data-l="' + l + '">' + l + '</div>'; } h += tileHTML(a); });
+  grid.innerHTML = h || '<div class="nosig" style="grid-column:1/-1"><b>NO SIGNAL</b>no apps visible</div>';
+  if (io) io.disconnect();
+  io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (!e.isIntersecting) return; io.unobserve(e.target); paintIcon(e.target.querySelector('.ico'), BYKEY.get(e.target.dataset.k)); }); }, { root: grid, rootMargin: '300px 0px' });
+  grid.querySelectorAll('.card').forEach(function (c) { io.observe(c); });
+  grid.scrollTop = st; applyFind(); markNtf();
+}
+var find = $('#find');
+function applyFind() {
+  var q = find.value.trim(), keys = q ? new Set(matchApps(q, 999).filter(function (a) { return !isHidden(a.key); }).map(function (a) { return a.key; })) : null;
+  grid.classList.toggle('finding', !!q); $('#find-x').hidden = !q;
+  grid.querySelectorAll('.card').forEach(function (c) { c.classList.toggle('hide-x', !!keys && !keys.has(c.dataset.k)); });
+  if (q) { grid.scrollTop = 0; $('#apps-tag').textContent = pad3(keys.size); } else $('#apps-tag').textContent = pad3(drawerApps().length);
+}
+find.addEventListener('input', applyFind);
+find.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') { e.preventDefault(); var q = find.value.trim(); var a = matchApps(q, 5).filter(function (x) { return !isHidden(x.key); })[0];
+    if (a) { find.blur(); launch(a, grid.querySelector('.card[data-k="' + CSS.escape(a.key) + '"]')); clearFind(); }
+    else if (q) { find.blur(); openTerm('web ' + q); } }
+  else if (e.key === 'Escape') { clearFind(); find.blur(); }
+});
+function clearFind() { if (find.value) { find.value = ''; applyFind(); } }
+$('#find-x').addEventListener('click', function () { clearFind(); find.focus(); });
+function focusFind() { setTimeout(function () { find.focus(); API.keyboard(); }, 80); }
+function markNtf() {
+  $$('[data-k]').forEach(function (c) { var a = BYKEY.get(c.dataset.k); c.classList.toggle('ntf', !!(a && NTF.pkgs && NTF.pkgs[a.pkg])); });
+  $$('[data-f]').forEach(function (c) { var f = homeItems()[+c.dataset.f]; c.classList.toggle('ntf', !!(f && f.apps && f.apps.some(function (k) { var a = BYKEY.get(k); return a && NTF.pkgs && NTF.pkgs[a.pkg]; }))); });
+}
 
 /* A–Z scrub rail */
 var az = $('#az'), azbig = $('#azbig'), azL = '';
-function letterOf(a) { var c = a.label[0].toUpperCase(); return /[A-Z]/.test(c) ? c : '#'; }
-function renderAZ() { var L = []; APPS.forEach(function (a) { var l = letterOf(a); if (L.indexOf(l) < 0) L.push(l); }); az.innerHTML = L.map(function (l) { return '<span data-l="' + l + '">' + l + '</span>'; }).join(''); }
+function renderAZ() { var L = []; drawerApps().forEach(function (a) { var l = letterOf(a); if (L.indexOf(l) < 0) L.push(l); }); az.innerHTML = L.map(function (l) { return '<span data-l="' + l + '">' + l + '</span>'; }).join(''); }
 function azAt(y) { var s = [].slice.call(az.children), best = null, bd = 1e9; s.forEach(function (e) { var r = e.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - y); if (d < bd) { bd = d; best = e; } }); return best; }
 function azJump(y) {
-  var e = azAt(y); if (!e || e.dataset.l === azL) return; azL = e.dataset.l;
+  var e = azAt(y); if (!e || e.dataset.l === azL) return; azL = e.dataset.l; clearFind();
   az.querySelectorAll('.on').forEach(function (x) { x.classList.remove('on'); }); e.classList.add('on');
-  var a = APPS.filter(function (x) { return letterOf(x) === azL; })[0], c = a && grid.querySelector('[data-k="' + CSS.escape(a.key) + '"]');
-  if (c) grid.scrollTop = c.offsetTop;
+  var hd = grid.querySelector('.lh[data-l="' + CSS.escape(azL) + '"]'); if (hd) grid.scrollTop = hd.offsetTop;
   azbig.hidden = false; azbig.textContent = azL; API.haptic('tick');
 }
 az.addEventListener('pointerdown', function (e) { e.stopPropagation(); try { az.setPointerCapture(e.pointerId); } catch (_) {} azL = ''; azJump(e.clientY); });
@@ -641,31 +768,66 @@ az.addEventListener('pointermove', function (e) { if (az.hasPointerCapture && az
 var azEnd = function () { azbig.hidden = true; az.querySelectorAll('.on').forEach(function (x) { x.classList.remove('on'); }); };
 az.addEventListener('pointerup', azEnd); az.addEventListener('pointercancel', azEnd);
 
-/* dock */
-function dockKeys() {
-  var d = store.get('jrl-dock', null);
-  if (!d && APPS.length) {
-    d = []; [/^phone|dialer/i, /messag|sms/i, /camera/i, /chrome|browser|firefox/i, /spotify|music/i].forEach(function (re) {
-      var a = APPS.filter(function (x) { return re.test(x.label) && d.indexOf(x.key) < 0; })[0]; if (a) d.push(a.key); });
-    APPS.forEach(function (a) { if (d.length < 4 && d.indexOf(a.key) < 0) d.push(a.key); });
-    store.set('jrl-dock', d);
+/* ---------- home: pinned apps and folders, 4 across ---------- */
+var HOMEMAX = 24;
+function homeItems() {
+  var h = store.get('jrl-home', null);
+  if (!h && APPS.length) {
+    var d = store.get('jrl-dock', null) || [];
+    [/^phone$|dialer/i, /^messages|sms/i, /camera/i, /brave|chrome|browser|firefox/i, /^gmail|proton mail|^mail/i, /maps/i, /photos|gallery/i, /whatsapp|signal/i,
+     /calendar/i, /spotify|youtube music|nts/i, /instagram/i, /claude/i].forEach(function (re) {
+      var a = APPS.filter(function (x) { return re.test(x.label) && d.indexOf(x.key) < 0; })[0]; if (a && d.length < 12) d.push(a.key); });
+    APPS.forEach(function (a) { if (d.length < 8 && d.indexOf(a.key) < 0) d.push(a.key); });
+    h = d.map(function (k) { return { k: k }; }); store.set('jrl-home', h);
   }
-  return (d || []).filter(function (k) { return BYKEY.has(k); }).slice(0, 5);
+  return h || [];
 }
-function renderDock() {
-  var ks = dockKeys(), dk = $('#dock'); dk.style.setProperty('--n', Math.max(ks.length, 1));
-  dk.innerHTML = ks.length ? ks.map(function (k) { var a = BYKEY.get(k);
-    return '<button type="button" class="card mini" data-k="' + esc(k) + '"><span class="ico"></span><span class="nm">' + esc(a.label) + '</span><i class="nd"></i></button>'; }).join('')
-    : '<div class="dock-empty">hold any app // pin to dock</div>';
-  dk.querySelectorAll('.card').forEach(function (c) { paintIcon(c.querySelector('.ico'), BYKEY.get(c.dataset.k)); });
-  $('#dock-n').textContent = pad(ks.length) + '/05'; markNtf();
+function saveHome(h) { store.set('jrl-home', h); renderHome(); }
+function homeIndex(k) { return homeItems().findIndex(function (it) { return it.k === k; }); }
+function folderOf(k) { return homeItems().findIndex(function (it) { return it.f && it.apps.indexOf(k) > -1; }); }
+function renderHome() {
+  var items = homeItems(), hg = $('#hgrid');
+  hg.innerHTML = items.map(function (it, i) {
+    if (it.f) {
+      var ks = it.apps.filter(function (k) { return BYKEY.has(k); });
+      return '<button type="button" class="card tile fold" data-f="' + i + '"><span class="fico">' + ks.slice(0, 4).map(function (k) { return '<span class="ico" data-ik="' + esc(k) + '"></span>'; }).join('') + '</span><span class="nm">' + esc(it.f) + '</span><i class="nd"></i></button>';
+    }
+    var a = BYKEY.get(it.k); return a ? tileHTML(a, ' data-hi="' + i + '"') : '';
+  }).join('') || '<div class="home-empty">open apps (swipe up) and hold one // pin to home</div>';
+  paintAll(hg); hg.querySelectorAll('[data-ik]').forEach(function (h) { paintIcon(h, BYKEY.get(h.dataset.ik)); });
+  markNtf();
 }
-function togglePin(a) {
-  var d = dockKeys(), i = d.indexOf(a.key);
-  if (i > -1) { d.splice(i, 1); log('dock // unpinned ' + a.label.toLowerCase()); }
-  else { if (d.length >= 5) { log('dock // full. unpin something first', true); return false; } d.push(a.key); log('dock // pinned ' + a.label.toLowerCase()); }
-  store.set('jrl-dock', d); renderDock(); return true;
+function pinHome(a) { var h = homeItems(); if (homeIndex(a.key) > -1) return true; if (h.length >= HOMEMAX) { log('home // full. make a folder', true); return false; } h.push({ k: a.key }); saveHome(h); log('home // pinned ' + a.label.toLowerCase()); return true; }
+function unpinHome(a) { var h = homeItems(), i = homeIndex(a.key); if (i < 0) return; h.splice(i, 1); saveHome(h); log('home // removed ' + a.label.toLowerCase()); }
+function moveHome(i, d) { var h = homeItems(), j = i + d; if (j < 0 || j >= h.length) return; var t = h[i]; h[i] = h[j]; h[j] = t; saveHome(h); }
+function addToFolder(a, fi, name) {
+  var h = homeItems(), at = homeIndex(a.key);
+  if (fi == null) { var f = { f: (name || 'Folder').slice(0, 18), apps: [a.key] }; if (at > -1) h[at] = f; else h.push(f); }
+  else { if (h[fi].apps.indexOf(a.key) < 0) h[fi].apps.push(a.key); if (at > -1) h.splice(at, 1); }
+  saveHome(h); log('home // ' + a.label.toLowerCase() + ' → folder');
 }
+function removeFromFolder(a, fi) {
+  var h = homeItems(), f = h[fi]; if (!f || !f.f) return; f.apps = f.apps.filter(function (k) { return k !== a.key; });
+  if (!f.apps.length) h.splice(fi, 1); else if (homeIndex(a.key) < 0 && h.length < HOMEMAX) h.splice(fi + 1, 0, { k: a.key });
+  saveHome(h); if (FO.i === fi) { if (h[fi] && h[fi].f) openFolder(fi); else closeFolder(); }
+}
+
+/* folders open as a panel over the field */
+var FO = { i: -1 }, folderEl = $('#folder');
+function folderOpen() { return !folderEl.hidden; }
+function openFolder(i) {
+  var f = homeItems()[i]; if (!f || !f.f) return; FO.i = i; folderEl.hidden = false; $('#fo-name').value = f.f;
+  var ks = f.apps.filter(function (k) { return BYKEY.has(k); }); $('#fo-n').textContent = pad(ks.length);
+  $('#fo-grid').innerHTML = ks.map(function (k) { return tileHTML(BYKEY.get(k), ' data-fi="' + i + '"'); }).join('');
+  paintAll($('#fo-grid')); markNtf();
+}
+function closeFolder() { if (folderEl.hidden) return; var v = $('#fo-name').value.trim(), h = homeItems(); if (h[FO.i] && h[FO.i].f && v && v !== h[FO.i].f) { h[FO.i].f = v.slice(0, 18); saveHome(h); } folderEl.hidden = true; FO.i = -1; }
+folderEl.querySelector('.back').addEventListener('pointerdown', function (e) { e.stopPropagation(); closeFolder(); });
+$('#fo-close').addEventListener('click', closeFolder);
+$('#fo-name').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); } });
+$('#fo-ungroup').addEventListener('click', function () { var h = homeItems(), f = h[FO.i]; if (!f) return; var ks = f.apps.filter(function (k) { return homeIndex(k) < 0; }).map(function (k) { return { k: k }; });
+  h.splice.apply(h, [FO.i, 1].concat(ks)); folderEl.hidden = true; FO.i = -1; saveHome(h); log('home // folder ungrouped'); });
+document.addEventListener('click', function (e) { var t = e.target.closest('[data-f]'); if (!t || !booted) return; API.haptic('key'); flash(t); openFolder(+t.dataset.f); });
 
 /* recents + launching */
 function renderRecent() {
@@ -686,39 +848,109 @@ var press = null;
 document.addEventListener('pointerdown', function (e) {
   var c = e.target.closest('[data-k]'); if (!c || e.target.closest('#term') || !$('#sheet').hidden || !booted) return;
   press = { c: c, x: e.clientX, y: e.clientY, long: false };
-  press.t = setTimeout(function () { if (!press) return; press.long = true; c.classList.add('hold'); API.haptic('long'); openSheet(BYKEY.get(c.dataset.k)); }, 460);
+  press.t = setTimeout(function () { if (!press) return; press.long = true; c.classList.add('hold'); API.haptic('long'); openSheet(BYKEY.get(c.dataset.k), c); }, 460);
 }, true);
 document.addEventListener('pointermove', function (e) { if (press && !press.long && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 10) { clearTimeout(press.t); press = null; } }, true);
 document.addEventListener('pointerup', function () {
   if (!press) return; clearTimeout(press.t); var p = press; press = null; if (p.long) return;
-  var a = BYKEY.get(p.c.dataset.k); if (a) launch(a, p.c);
+  var a = BYKEY.get(p.c.dataset.k); if (a) { if (p.c.dataset.fi != null) setTimeout(closeFolder, 300); launch(a, p.c); if (current === 'apps') setTimeout(clearFind, 400); }
 }, true);
 document.addEventListener('pointercancel', function () { if (press) { clearTimeout(press.t); if (!press.long) press.c.classList.remove('hold'); press = null; } }, true);
 document.addEventListener('contextmenu', function (e) { if (!e.target.closest('input')) e.preventDefault(); });
 
-/* sheet */
-var sheet = $('#sheet'), sheetApp = null;
+/* sheet: actions depend on where the app was held (drawer, home, folder) */
+var sheet = $('#sheet'), sheetApp = null, sheetCtx = {};
 function sheetOpen() { return !sheet.hidden; }
-function openSheet(a) {
-  if (!a) return; sheetApp = a; sheet.hidden = false;
-  $('#sh-pin span').textContent = dockKeys().indexOf(a.key) > -1 ? 'Unpin from dock' : 'Pin to dock';
-  paintIcon($('#sh-ico'), a); decode($('#sh-t'), a.label, { frames: 12, keep: 1 }); $('#sh-p').textContent = a.pkg; $('#sh-n').textContent = pad3(a.n);
+function shBtn(a, label, mark, cls) { return '<button type="button" data-a="' + a + '"' + (cls ? ' class="' + cls + '"' : '') + '><span>' + label + '</span><i>' + mark + '</i></button>'; }
+function sheetActions() {
+  var a = sheetApp, c = sheetCtx, hi = homeIndex(a.key), h = '';
+  h += shBtn('open', 'Open', '↵');
+  if (c.fi != null) h += shBtn('unfold', 'Take out of folder', '↑');
+  else if (hi > -1) { h += shBtn('unpin', 'Remove from home', '−'); if (c.hi != null) { h += shBtn('left', 'Move earlier', '◂'); h += shBtn('right', 'Move later', '▸'); } }
+  else if (folderOf(a.key) < 0) h += shBtn('pin', 'Pin to home', '+');
+  if (c.fi == null) h += shBtn('folder', 'Put in a folder', '▦');
+  h += shBtn('hide', isHidden(a.key) ? 'Show in apps' : 'Hide from apps', '◌');
+  h += shBtn('info', 'App info', 'i');
+  h += shBtn('uninstall', 'Uninstall', '×', 'alt');
+  h += shBtn('cancel', 'Cancel', 'esc');
+  $('#sh-acts').innerHTML = h;
+}
+function folderChooser() {
+  var h = homeItems(), out = '';
+  h.forEach(function (it, i) { if (it.f) out += shBtn('into:' + i, it.f, pad(it.apps.length)); });
+  out += '<div class="newf"><input id="newf" maxlength="18" placeholder="NEW FOLDER NAME" autocomplete="off" spellcheck="false"><button type="button" data-a="mkf">Make</button></div>';
+  out += shBtn('back', 'Back', '◂');
+  $('#sh-acts').innerHTML = out;
+}
+function openSheet(a, el) {
+  if (!a) return; sheetApp = a; sheetCtx = { hi: el && el.dataset.hi != null ? +el.dataset.hi : null, fi: el && el.dataset.fi != null ? +el.dataset.fi : null };
+  sheet.hidden = false; sheetActions();
+  paintIcon($('#sh-ico'), a); decode($('#sh-t'), a.label, { frames: 10, keep: 1 }); $('#sh-p').textContent = a.pkg; $('#sh-n').textContent = pad3(a.n);
   var n = NTF.pkgs && NTF.pkgs[a.pkg]; $('#sh-ntf').hidden = !n; if (n) $('#sh-ntf').textContent = n + ' pending';
 }
 function closeSheet() { if (sheet.hidden) return; sheet.hidden = true; sheetApp = null; $$('.hold').forEach(function (c) { c.classList.remove('hold'); }); }
 sheet.querySelector('.back').addEventListener('pointerdown', function (e) { e.stopPropagation(); closeSheet(); });
-sheet.querySelectorAll('.sh-acts button').forEach(function (b) {
-  b.addEventListener('click', function () {
-    var a = sheetApp, act = b.dataset.a; if (!a) return closeSheet(); flash(b); API.haptic('key');
-    setTimeout(function () {
-      if (act === 'open') { closeSheet(); launch(a, null); }
-      else if (act === 'pin') { togglePin(a); closeSheet(); }
-      else if (act === 'info') { closeSheet(); API.info(a.key); log('info // ' + a.pkg); }
-      else if (act === 'uninstall') { closeSheet(); API.uninstall(a.key); log('pm // uninstall requested: ' + a.pkg, true); }
-      else closeSheet();
-    }, 140);
-  });
+$('#sh-acts').addEventListener('click', function (e) {
+  var b = e.target.closest('button[data-a]'); if (!b) return; var a = sheetApp, act = b.dataset.a, c = sheetCtx; if (!a) return closeSheet();
+  API.haptic('key');
+  if (act === 'folder') return folderChooser();
+  if (act === 'back') return sheetActions();
+  if (act === 'mkf') { var nm = ($('#newf').value || '').trim() || 'Folder'; addToFolder(a, null, nm); return closeSheet(); }
+  if (act.indexOf('into:') === 0) { addToFolder(a, +act.slice(5)); return closeSheet(); }
+  flash(b);
+  setTimeout(function () {
+    if (act === 'open') { closeSheet(); if (c.fi != null) closeFolder(); launch(a, null); }
+    else if (act === 'pin') { pinHome(a); closeSheet(); }
+    else if (act === 'unpin') { unpinHome(a); closeSheet(); }
+    else if (act === 'left' || act === 'right') { moveHome(c.hi, act === 'left' ? -1 : 1); closeSheet(); }
+    else if (act === 'unfold') { closeSheet(); removeFromFolder(a, c.fi); }
+    else if (act === 'hide') { var hs = hiddenSet(), i = hs.indexOf(a.key); if (i > -1) hs.splice(i, 1); else hs.push(a.key); store.set('jrl-hidden', hs); closeSheet(); renderGrid(); renderAZ(); log('apps // ' + (i > -1 ? 'showing ' : 'hid ') + a.label.toLowerCase()); }
+    else if (act === 'info') { closeSheet(); API.info(a.key); log('info // ' + a.pkg); }
+    else if (act === 'uninstall') { closeSheet(); API.uninstall(a.key); log('pm // uninstall requested: ' + a.pkg, true); }
+    else closeSheet();
+  }, 140);
 });
+$('#sh-acts').addEventListener('focusin', function (e) { if (e.target.id === 'newf') API.keyboard(); });
+$('#sh-acts').addEventListener('keydown', function (e) { if (e.target.id === 'newf' && e.key === 'Enter') { e.preventDefault(); var m = $('#sh-acts [data-a="mkf"]'); if (m) m.click(); } });
+
+/* ---------- agenda (calendar) and now playing (media sessions) ---------- */
+var AG = { perm: false, ev: [] }, MED = { on: false };
+var DOW = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+function evDay(e) {
+  var d = new Date(e.begin), y = e.allDay ? new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) : new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  var t = new Date(), t0 = new Date(t.getFullYear(), t.getMonth(), t.getDate()), dd = Math.round((y - t0) / 864e5);
+  return dd <= 0 ? 'TODAY' : dd === 1 ? 'TMRW' : DOW[y.getDay()] + ' ' + pad(y.getDate());
+}
+function pollAgenda() { AG = API.events() || AG; renderAgenda(); }
+function renderAgenda() {
+  var box = $('#agenda'), now = Date.now();
+  if (AG.na) { $('.agenda').hidden = true; return; } $('.agenda').hidden = false;
+  if (!AG.perm) { $('#ag-n').textContent = 'off'; box.innerHTML = '<div class="ag-empty"><span>calendar not connected</span><button type="button" class="chip" id="ag-grant">Show my calendar</button></div>'; return; }
+  var ev = (AG.ev || []).filter(function (e) { return e.end > now; }).slice(0, 3);
+  $('#ag-n').textContent = pad((AG.ev || []).filter(function (e) { return e.end > now; }).length);
+  box.innerHTML = ev.length ? ev.map(function (e) { var d = new Date(e.begin), live = !e.allDay && e.begin <= now;
+    return '<button type="button" class="ev' + (live ? ' now' : '') + '" data-ev="' + esc(e.id) + '" data-b="' + e.begin + '"><span class="d">' + evDay(e) + '</span><span class="t">' + (e.allDay ? 'ALL' : live ? 'NOW' : pad(d.getHours()) + ':' + pad(d.getMinutes())) + '</span><b>' + esc(e.title || '(no title)') + '</b></button>'; }).join('')
+    : '<div class="ag-empty"><span>nothing scheduled this week</span></div>';
+}
+$('#agenda').addEventListener('click', function (e) {
+  if (e.target.id === 'ag-grant') { API.askCalendar(); return; }
+  var b = e.target.closest('[data-ev]'); if (b) { flash(b); API.haptic('key'); API.openEvent(b.dataset.ev, b.dataset.b); }
+});
+$('#ag-head').addEventListener('click', function () { API.haptic('key'); API.openCalendar(); });
+function pollMedia() {
+  MED = API.media() || MED; var np = $('#np');
+  if (!MED.on || !MED.active) { np.hidden = true; return; }
+  np.hidden = false; np.classList.toggle('on', !!MED.playing);
+  var t = MED.title || 'Unknown', s = (MED.artist ? MED.artist + ' · ' : '') + (MED.app || '');
+  if ($('#np-title').textContent !== t) decode($('#np-title'), t, { frames: 10 }); $('#np-sub').textContent = s;
+  $('#np-play').textContent = MED.playing ? '❚❚' : '▶';
+}
+$('#np').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-mc]'); if (b) { API.haptic('key'); API.mediaCmd(b.dataset.mc); setTimeout(pollMedia, 350); return; }
+  if (e.target.closest('#np-open,#np-open2') && MED.pkg) { var a = APPS.filter(function (x) { return x.pkg === MED.pkg; })[0]; if (a) launch(a, $('#np')); }
+});
+setInterval(function () { if (!asleep && booted && current === 'home' && !termOpen()) pollMedia(); }, 3000);
+setInterval(function () { if (!asleep) pollAgenda(); }, 300000);
 
 /* ---------- modules ---------- */
 var MODS = ['sys', 'home', 'apps'];
@@ -837,10 +1069,10 @@ function bump(dir) {
 var ENTR = ['shard', 'scan', 'split', 'tear', 'static'], lastE = '';
 function cardsIn(base) {
   if (reduce) return; var gr = grid.getBoundingClientRect(), st = 'steps(1,end)', kind = pick(ENTR, lastE); lastE = kind;
-  var vis = [].slice.call(grid.children).filter(function (c) { var r = c.getBoundingClientRect(); return r.bottom > gr.top && r.top < gr.bottom; }).slice(0, 21);
+  var vis = [].slice.call(grid.querySelectorAll('.card:not(.hide-x)')).filter(function (c) { var r = c.getBoundingClientRect(); return r.bottom > gr.top && r.top < gr.bottom; }).slice(0, 21);
   var order = vis.map(function (_, i) { return i; }); if (kind !== 'scan') for (var i = order.length - 1; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)), t = order[i]; order[i] = order[k]; order[k] = t; }
   vis.forEach(function (c, i) {
-    var d = base + order.indexOf(i) * (kind === 'scan' ? 40 : 60), kf, dur = 560, jx = function (a) { return Math.round((Math.random() - .5) * a) + 'px'; };
+    var d = base + order.indexOf(i) * (kind === 'scan' ? 18 : 26), kf, dur = 560, jx = function (a) { return Math.round((Math.random() - .5) * a) + 'px'; };
     if (kind === 'shard') kf = [{ clipPath: 'inset(0 100% 0 0)', transform: 'translateX(-12px)', filter: 'invert(1)', easing: st }, { offset: .25, clipPath: 'inset(20% 35% 30% 0)', transform: 'translateX(9px)', filter: 'invert(1)', easing: st },
       { offset: .5, clipPath: 'inset(0 0 58% 0)', transform: 'translateX(-5px)', filter: 'none', easing: st }, { offset: .75, clipPath: 'inset(0 0 0 0)', transform: 'translateX(2px)', filter: 'invert(1)', easing: st }, { clipPath: 'inset(0 0 0 0)', transform: 'none', filter: 'none' }];
     else if (kind === 'tear') kf = [{ transform: 'translateX(' + jx(60) + ')', clipPath: 'inset(0 0 66% 0)', filter: 'hue-rotate(120deg) saturate(2)', easing: st }, { offset: .3, transform: 'translateX(' + jx(40) + ')', clipPath: 'inset(33% 0 33% 0)', filter: 'invert(1)', easing: st },
@@ -849,7 +1081,6 @@ function cardsIn(base) {
     else if (kind === 'static') kf = [{ opacity: 0, filter: 'invert(1)', easing: st }, { offset: .2, opacity: 1, filter: 'invert(1) contrast(2)', easing: st }, { offset: .4, opacity: 0, easing: st }, { offset: .6, opacity: 1, filter: 'invert(1)', easing: st }, { offset: .8, opacity: .4, filter: 'none', easing: st }, { opacity: 1, filter: 'none' }];
     else kf = [{ clipPath: 'inset(0 50% 0 50%)', filter: 'invert(1)', easing: 'steps(3,end)' }, { offset: .5, clipPath: 'inset(45% 0 45% 0)', filter: 'invert(1)', easing: 'steps(3,end)' }, { offset: .85, clipPath: 'inset(0 0 0 0)', filter: 'none', easing: st }, { clipPath: 'inset(0 0 0 0)', filter: 'none' }];
     c.animate(kf, { duration: dur, delay: d, fill: 'backwards' });
-    var nm = c.querySelector('.nm'), a = BYKEY.get(c.dataset.k); if (nm && a) decode(nm, a.label, { delay: d + 80, frames: 14 });
   });
   log('apps // ' + kind);
 }
@@ -868,7 +1099,7 @@ function go(mod, o) {
   var oc = getComputedStyle(stage).backgroundColor, reform = kind === 'construct';
   current = mod; R.dataset.field = mod; applyPal(); syncBars();
   $('#pager').querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.m === mod); });
-  var D = !can ? 0 : kind === 'glitch' ? 0 : kind === 'bands' ? 380 : 560, panel = null;
+  var D = !can ? 0 : kind === 'bands' ? 120 : 0, panel = null; if (mod !== 'apps') clearFind();
   $$('.mpanel').forEach(function (p) {
     var on = p.dataset.panel === mod; p.classList.toggle('on', on); p.setAttribute('aria-hidden', !on);
     if (on) { panel = p; p.style.animation = 'none'; void p.offsetWidth; p.style.animation = reform ? 'none' : ''; p.style.animationDelay = D + 'ms'; }
@@ -877,10 +1108,10 @@ function go(mod, o) {
   var TD = !can ? 0 : kind === 'glitch' ? 450 : reform ? D + 150 : kind === 'bands' ? 850 : 1100;
   decode($('#mname'), modName(), { keep: 1, frames: o.quiet ? 1 : 14, delay: TD });
   decode($('#giant'), META[mod].g, { keep: 1, frames: o.quiet ? 1 : 22, speed: 85, delay: TD });
-  if (mod === 'apps') { $('#t-apps').textContent = 'Apps'; decode($('#t-apps'), 'Apps', { keep: 1, frames: 18, delay: TD }); if (changed && !o.quiet) cardsIn(TD - 300); }
+  if (mod === 'apps') { $('#t-apps').textContent = 'Apps'; decode($('#t-apps'), 'Apps', { keep: 1, frames: 18, delay: TD }); if (changed && !o.quiet) cardsIn(80); if (o.find) focusFind(); }
   if (mod === 'sys') { decode($('#t-sys'), 'Sys', { keep: 1, frames: 18, delay: TD }); refreshSys(); eqKick(); }
   decodePanel(mod, TD, o.quiet);
-  if (mod === 'home') fieldStart(); else fieldStop();
+  if (mod === 'home') { fieldStart(); pollMedia(); } else fieldStop();
   if (!o.quiet) log('module // ' + mod);
   return true;
 }
@@ -937,7 +1168,7 @@ function fieldLoop(now) {
 /* ---------- gestures: swipe sideways between modules, up for the terminal, down for the notification shade ---------- */
 var gs = null;
 stage.addEventListener('pointerdown', function (e) {
-  if (!booted || termOpen() || sheetOpen() || e.target.closest('.az')) return;
+  if (!booted || termOpen() || sheetOpen() || folderOpen() || e.target.closest('.az,.findbar')) return;
   gs = { x: e.clientX, y: e.clientY, t: performance.now() }; fieldPtr(e, 'down'); if (current === 'sys') EQ.kick = 1;
 });
 stage.addEventListener('pointermove', function (e) { if (gs) fieldPtr(e, 'move'); });
@@ -949,7 +1180,7 @@ stage.addEventListener('pointerup', function (e) {
     if (MODS[j]) { API.haptic('tick'); go(MODS[j], { from: { x: dx < 0 ? r.right : r.left, y: e.clientY } }); } else bump(dx < 0 ? 1 : -1);
     return;
   }
-  if (current === 'home' && Math.abs(dy) > 80 && Math.abs(dy) > Math.abs(dx) * 1.4) { if (dy < 0) openTerm(); else { API.expand(); log('shade // expanded'); } }
+  if (current === 'home' && Math.abs(dy) > 80 && Math.abs(dy) > Math.abs(dx) * 1.4) { API.haptic('tick'); if (dy < 0) go('apps', { from: { x: e.clientX, y: e.clientY }, find: true }); else { API.expand(); log('shade // expanded'); } }
 });
 stage.addEventListener('pointercancel', function () { gs = null; FLD.ptr.in = false; });
 $('#prompt').addEventListener('click', function () { API.haptic('key'); openTerm(); });
@@ -975,12 +1206,9 @@ setInterval(function () { if (!asleep) poll(); }, 15000);
 function paintStats() {
   var lv = BAT.level, c = NTF.on ? NTF.count : -1;
   $('#s-bat').textContent = lv < 0 ? '--' : pad(Math.min(99, lv)) + (BAT.charging ? '+' : '');
-  $('#h-bat').textContent = lv < 0 ? '--' : lv + '%' + (BAT.charging ? '+' : '');
-  var bp = $('#h-batpx'); if (!bp.children.length) bp.innerHTML = '<i></i>'.repeat(10); [].forEach.call(bp.children, function (e, i) { e.className = i < Math.round(lv / 10) ? 'on' : ''; }); bp.classList.toggle('low', lv >= 0 && lv < 20 && !BAT.charging);
   $('#s-ntf').classList.toggle('off', c <= 0); $('#s-ntf b').textContent = c < 0 ? '--' : pad(c);
-  $('#h-ntf').textContent = c < 0 ? 'off' : pad(c); $('#sy-ntf').textContent = c < 0 ? 'off' : pad(c);
+  $('#sy-ntf').textContent = c < 0 ? 'off' : pad(c);
   $('#ntf-grant').hidden = !!NTF.on; $('#ntf-on').hidden = !NTF.on;
-  $('#h-up').textContent = DEV.uptime ? fmtUp(upSecs()) : '--';
   markNtf();
 }
 $('#ntf-grant').addEventListener('click', function () { flash(this); API.settings('notif'); log('ntf // opening notification access'); });
@@ -1036,7 +1264,7 @@ function eqFrame(now) {
 function eqKick() { if (!EQ.raf) EQ.raf = requestAnimationFrame(eqFrame); }
 
 /* prompt hint rotates slowly while home is up */
-var PH = ['search · type ~ for root', 'swipe up anywhere', 'ls · open · web · help', 'hold an app for options', 'swipe sideways for modules'], phi = 0;
+var PH = ['command line · ~ for root', 'swipe up for apps + search', 'hold an app: folders, pin, hide', 'swipe down for notifications', 'tap the agenda to open calendar'], phi = 0;
 setInterval(function () { if (asleep || current !== 'home' || !booted || termOpen()) return; phi = (phi + 1) % PH.length; decode($('#p-hint'), PH[phi], { frames: 14, speed: 60, keep: 1 }); }, 11000);
 
 /* ---------- boot: plays when the launcher process starts; `reboot` replays it ---------- */
@@ -1044,7 +1272,7 @@ var boot = $('#boot'), bl = $('#bootlog'), bk = 0, bdone = true, bready = false,
 function hexs(s) { return s.split('').map(function (c) { return c.charCodeAt(0).toString(16).padStart(2, '0'); }).join(' '); }
 function bar(p) { var n = Math.round(p / 10); return '█'.repeat(n) + '░'.repeat(10 - n) + ' ' + pad(p) + '%'; }
 function bootLines() {
-  var h = function () { return '0x' + Math.floor(Math.random() * 0xffffffff).toString(16).padStart(8, '0'); }, dk = dockKeys(), rec = store.get('jrl-recent', [])[0], ra = rec && BYKEY.get(rec);
+  var h = function () { return '0x' + Math.floor(Math.random() * 0xffffffff).toString(16).padStart(8, '0'); }, dk = homeItems().filter(function (it) { return it.k; }).map(function (it) { return it.k; }).slice(0, 5), rec = store.get('jrl-recent', [])[0], ra = rec && BYKEY.get(rec);
   var tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) {}
   return [
     ['sys', 'jrl-kernel 4.11.2-graphic-realism · ' + (DEV.release ? 'android ' + DEV.release + ' (sdk ' + DEV.sdk + ')' : 'web preview')],
@@ -1055,7 +1283,7 @@ function bootLines() {
     ['pm', 'queryIntentActivities(MAIN, LAUNCHER) … ' + APPS.length + ' packages'],
     ['pm', 'sort --label --locale a→z · halftone 12×12 icons'],
     ['hex', hexs('JERELEVANCE').toUpperCase()]
-  ].concat(dk.map(function (k, i) { var a = BYKEY.get(k); return ['dock', pad(i + 1) + ' :: ' + (a ? a.pkg : k)]; }))
+  ].concat(dk.map(function (k, i) { var a = BYKEY.get(k); return ['home', pad(i + 1) + ' :: ' + (a ? a.pkg : k)]; }))
   .concat([
     ['pwr', BAT.level < 0 ? 'battery … no reading' : 'battery ' + BAT.level + '% · ' + (BAT.charging ? 'charging' : 'discharging')],
     ['ntf', NTF.on ? 'listener bound · ' + pad(Math.max(0, NTF.count)) + ' pending' : 'listener not bound · grant it from sys/notif'],
@@ -1279,11 +1507,11 @@ var SETS = { wifi: 1, bt: 1, bluetooth: 1, display: 1, sound: 1, battery: 1, lau
 var ROOTCMD = ['set', 'field', 'color', 'chaos', 'invert', 'neofetch', 'banner', 'skull', 'hack'];
 var TC = {
   help: function () {
-    var G2 = [['apps', 'ls · open X · info X · pin X · unpin X · dock · recent · uninstall X · N (open by number)'],
+    var G2 = [['apps', 'ls · open X · info X · pin X · unpin X · home · recent · hide X · unhide X · hidden · uninstall X · N'],
       ['phone', 'settings [wifi|bt|display|sound|battery|launcher|notif|wallpaper] · shade · notif · battery'],
       ['web', 'web QUERY · url ADDRESS'],
-      ['shell', 'help · clear · history · date · uptime · whoami · echo · fortune · go home|apps|sys · reboot · exit']];
-    G2.push(isRoot ? ['root', 'set fx|decode|breathe|boot|icons · field [N|next] · color · chaos on|off · invert on|off · neofetch · banner · hack X · rm -rf / · logout']
+      ['shell', 'help · clear · history · date · uptime · whoami · echo · fortune · go home|apps|sys · update · version · reboot · exit']];
+    G2.push(isRoot ? ['root', 'set fx|decode|breathe|boot always|smart|off|icons app|mosaic|pixel · field [N|next] · color · chaos on|off · invert on|off · neofetch · banner · hack X · rm -rf / · logout']
                    : ['root', "~  (escalate. there's more behind it)"]);
     G2.forEach(function (g) { tline('<span class="ti">' + g[0] + '</span> ' + esc(g[1])); });
   },
@@ -1304,9 +1532,14 @@ var TC = {
   open: function (a) { if (!a) return terr('usage: open APP'); var x = findApp(a); if (!x) return terr('open: ' + a + ': no such package'); execApp(x); },
   info: function (a) { var x = findApp(a); if (!x) return terr('info: ' + (a || '') + ': no such package'); ttxt('app info // ' + x.pkg, 'tb'); API.info(x.key); },
   uninstall: function (a) { var x = findApp(a); if (!x) return terr('uninstall: ' + (a || '') + ': no such package'); ttxt('pm uninstall ' + x.pkg + ' → system will ask', 'tr'); API.uninstall(x.key); },
-  pin: function (a) { var x = findApp(a); if (!x) return terr('pin: ' + (a || '') + ': no such package'); if (dockKeys().indexOf(x.key) > -1) return ttxt(x.label + ' is already docked', 'tdim'); if (togglePin(x)) ttxt('docked ' + x.label, 'tb'); else terr('dock full (5/5). unpin something.'); },
-  unpin: function (a) { var x = findApp(a); if (!x) return terr('unpin: ' + (a || '') + ': no such package'); if (dockKeys().indexOf(x.key) < 0) return ttxt(x.label + ' is not docked', 'tdim'); togglePin(x); ttxt('undocked ' + x.label, 'tb'); },
-  dock: function () { var d = dockKeys(); if (!d.length) return ttxt('dock is empty. pin X', 'tdim'); d.forEach(function (k, i) { var x = BYKEY.get(k); tline('<span class="tdim">' + pad(i + 1) + '</span>  <span class="lk" data-run="open ' + esc(x.label) + '">' + esc(x.label) + '</span>'); }); },
+  pin: function (a) { var x = findApp(a); if (!x) return terr('pin: ' + (a || '') + ': no such package'); if (homeIndex(x.key) > -1) return ttxt(x.label + ' is already on home', 'tdim'); if (pinHome(x)) ttxt('pinned ' + x.label + ' to home', 'tb'); else terr('home is full (' + HOMEMAX + '). make a folder.'); },
+  unpin: function (a) { var x = findApp(a); if (!x) return terr('unpin: ' + (a || '') + ': no such package'); if (homeIndex(x.key) < 0) return ttxt(x.label + ' is not on home', 'tdim'); unpinHome(x); ttxt('removed ' + x.label + ' from home', 'tb'); },
+  home: function () { var h = homeItems(); if (!h.length) return ttxt('home is empty. pin X', 'tdim'); h.forEach(function (it, i) { if (it.f) return tline('<span class="tdim">' + pad(i + 1) + '</span>  ▦ ' + esc(it.f) + '  <span class="tdim">' + it.apps.length + ' apps</span>'); var x = BYKEY.get(it.k); if (x) tline('<span class="tdim">' + pad(i + 1) + '</span>  <span class="lk" data-run="open ' + esc(x.label) + '">' + esc(x.label) + '</span>'); }); },
+  hide: function (a) { var x = findApp(a); if (!x) return terr('hide: ' + (a || '') + ': no such package'); var h = hiddenSet(); if (h.indexOf(x.key) < 0) h.push(x.key); store.set('jrl-hidden', h); renderGrid(); renderAZ(); ttxt('hid ' + x.label + ' from apps. still searchable here.', 'tb'); },
+  unhide: function (a) { var x = findApp(a); if (!x) return terr('unhide: ' + (a || '') + ': no such package'); store.set('jrl-hidden', hiddenSet().filter(function (k) { return k !== x.key; })); renderGrid(); renderAZ(); ttxt(x.label + ' is back in apps', 'tb'); },
+  hidden: function () { var h = hiddenSet().map(function (k) { return BYKEY.get(k); }).filter(Boolean); if (!h.length) return ttxt('nothing hidden', 'tdim'); h.forEach(function (x) { tline(appRow(x) + '  <span class="lk" data-run="unhide ' + esc(x.label) + '">unhide</span>'); }); },
+  update: function () { if (!NB) return ttxt('preview: the phone pulls new versions on its own', 'tdim'); ttxt('pulling the latest ui from github …', 'tb'); term.busy = true; window._upd = true; API.update(); return new Promise(function (r) { window._updDone = r; setTimeout(r, 15000); }); },
+  version: function () { ttxt('ui ' + UIV + ' · app ' + (DEV.version || '?'), 'tw'); },
   recent: function () { var r = store.get('jrl-recent', []).map(function (k) { return BYKEY.get(k); }).filter(Boolean); if (!r.length) return ttxt('nothing launched yet', 'tdim'); r.forEach(function (x) { tline(appRow(x)); }); },
   go: function (a) { a = (a || '').toLowerCase(); if (!META[a]) return terr('go: modules are ' + MODS.join(', ')); ttxt('dropping back into the gui // ' + a, 'tb'); setTimeout(function () { closeTerm(true); go(a); }, 300); },
   exit: function () { ttxt('logout', 'tdim'); setTimeout(closeTerm, 260); },
@@ -1337,8 +1570,8 @@ var TC = {
     if (k === 'fx') { if (v === 'random' || !v) { SET.fx = ''; saveSet(); return ttxt('fx: random', 'tb'); } if (FXK.indexOf(v) < 0) return terr('fx: ' + FXK.join(' | ') + ' | random'); SET.fx = v; saveSet(); return ttxt('fx locked to ' + v + '. every module switch uses it now.', 'tb'); }
     if (k === 'decode') { var m = { slow: 2, normal: 1, fast: .45 }; if (!m[v]) return terr('decode: slow | normal | fast'); SET.decode = m[v]; saveSet(); return ttxt('decode speed: ' + v, 'tb', { frames: 16 }); }
     if (k === 'breathe') { SET.breathe = v !== 'off'; saveSet(); if (!SET.breathe) R.dataset.nobreathe = '1'; else delete R.dataset.nobreathe; return ttxt('breathing ' + (SET.breathe ? 'resumed.' : 'stopped. holding.'), 'tb'); }
-    if (k === 'boot') { SET.boot = v !== 'off'; saveSet(); return ttxt('boot sequence ' + (SET.boot ? 'on' : 'off') + ' at next start', 'tb'); }
-    if (k === 'icons') { if (v !== 'pixel' && v !== 'app') return terr('icons: pixel | app'); SET.icons = v; saveSet(); renderGrid(); renderDock(); return ttxt('icons: ' + v, 'tb'); }
+    if (k === 'boot') { if (['always', 'smart', 'off'].indexOf(v) < 0) return terr('boot: always | smart | off'); SET.boot = v; saveSet(); return ttxt(v === 'smart' ? 'boot plays after a phone restart or an update only' : 'boot: ' + v, 'tb'); }
+    if (k === 'icons') { if (['pixel', 'app', 'mosaic'].indexOf(v) < 0) return terr('icons: app | mosaic | pixel'); SET.icons = v; saveSet(); store.set('jrl-iconpick', true); renderGrid(); renderHome(); return ttxt('icons: ' + v, 'tb'); }
     terr('set: fx | decode | breathe | boot | icons');
   },
   field: function (a) {
@@ -1395,23 +1628,31 @@ function trun(v) {
 /* ---------- native events (Kotlin calls JRLnative.event) ---------- */
 function onBack() {
   if (sheetOpen()) return closeSheet();
+  if (folderOpen()) return closeFolder();
   if (termOpen()) return closeTerm();
+  if (current === 'apps' && find.value) return clearFind();
   if (!bdone && bready) return finish();
   if (current !== 'home') return go('home', { from: { x: srect().left + srect().width / 2, y: srect().bottom - 40 } });
   bump(0);
 }
 function onHome() {
-  closeSheet(); if (termOpen()) closeTerm(true); if (!booted) return;
+  closeSheet(); closeFolder(); clearFind(); if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); if (termOpen()) closeTerm(true); if (!booted) return;
   if (current !== 'home') go('home', { from: { x: srect().left + srect().width / 2, y: srect().top + srect().height / 2 } });
   else if (FLD.x) FLD.waves.push({ x: FLD.w / 2, y: FLD.h / 2, r: 0, s: 1 });
 }
-function onShow() { asleep = false; R.classList.remove('asleep'); DEV = API.device() || DEV; DEVT = performance.now(); poll(); tick(); if (current === 'home') fieldStart(); if (current === 'sys') { refreshSys(); eqKick(); } syncBars(); }
-function onHide() { asleep = true; R.classList.add('asleep'); fieldStop(); closeSheet(); press = null; }
+function onShow() { asleep = false; R.classList.remove('asleep'); DEV = API.device() || DEV; DEVT = performance.now(); poll(); tick(); pollAgenda(); pollMedia(); if (current === 'home') fieldStart(); if (current === 'sys') { refreshSys(); eqKick(); } syncBars(); }
+function onHide() { asleep = true; R.classList.add('asleep'); fieldStop(); closeSheet(); press = null; if (window._reload) location.reload(); }
 window.JRLnative = {
   event: function (name, data) {
     if (name === 'back') onBack(); else if (name === 'home') onHome(); else if (name === 'show') onShow(); else if (name === 'hide') onHide();
     else if (name === 'apps') { loadApps(); log('pm // package list changed'); }
     else if (name === 'error') log(String(data || 'error'), true);
+    else if (name === 'calendar') pollAgenda();
+    else if (name === 'updated') {
+      var r = String(data || '');
+      if (window._upd) { window._upd = false; ttxt(r === 'updated' ? 'new ui pulled. reloading …' : r === 'same' ? 'already on the latest ui.' : 'could not reach github. try again on wifi.', r === 'failed' ? 'tr' : 'tb'); if (window._updDone) window._updDone(); if (r === 'updated') setTimeout(function () { location.reload(); }, 900); }
+      else if (r === 'updated') { window._reload = true; log('ui // update ready, applies next time you leave home', true); }
+    }
   }
 };
 document.addEventListener('visibilitychange', function () { if (NB) return; if (document.hidden) onHide(); else onShow(); });
@@ -1425,9 +1666,11 @@ document.addEventListener('keydown', function (e) {
 /* ---------- start ---------- */
 DEV = API.device() || {}; DEVT = performance.now();
 if (SET.breathe === false) R.dataset.nobreathe = '1';
-loadApps(); poll(); tick(); renderPager(); applyPal(); refreshSys();
+loadApps(); poll(); tick(); renderPager(); applyPal(); refreshSys(); pollAgenda(); pollMedia();
 $('#mname').textContent = modName();
-if (SET.boot !== false) runBoot(); else { bdone = true; boot.hidden = true; enterHome(); }
+var bootNow = SET.boot === 'always' || (SET.boot !== 'off' && ((DEV.uptime && DEV.uptime < 600) || store.get('jrl-uiv', '') !== UIV));
+store.set('jrl-uiv', UIV);
+if (bootNow) runBoot(); else { bdone = true; boot.hidden = true; enterHome(); }
 window.JRL = { go: go, openTerm: openTerm, trun: function (v) { openTerm(v); }, sheet: function (i) { openSheet(APPS[i || 0]); }, apps: function () { return APPS; } };
 })();
 </script>

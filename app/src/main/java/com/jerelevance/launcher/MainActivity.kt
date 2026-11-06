@@ -1,5 +1,6 @@
 package com.jerelevance.launcher
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.ActivityNotFoundException
@@ -24,6 +25,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -38,7 +40,7 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         const val HOST = "appassets.androidplatform.net"
-        const val START = "https://$HOST/assets/www/index.html"
+        const val START = "https://$HOST/live/index.html"
         private const val FIELD_BLUE = 0xFF1722F6.toInt()
     }
 
@@ -47,6 +49,8 @@ class MainActivity : ComponentActivity() {
     private var pageReady = false
     private var insetJs = ""
     private val launcherApps by lazy { getSystemService(LauncherApps::class.java) }
+    private val calendarPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { emit("calendar") }
+    @Volatile private var fetching = false
 
     private val appsCallback = object : LauncherApps.Callback() {
         override fun onPackageRemoved(packageName: String?, user: UserHandle?) = emit("apps")
@@ -65,10 +69,12 @@ class MainActivity : ComponentActivity() {
         )
 
         if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) WebView.setWebContentsDebuggingEnabled(true)
+        Live.dropIfStale(this)
 
         val loader = WebViewAssetLoader.Builder()
             .setDomain(HOST)
             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
+            .addPathHandler("/live/", LiveHandler(this))
             .addPathHandler("/icon/", IconHandler(this))
             .build()
 
@@ -144,6 +150,7 @@ class MainActivity : ComponentActivity() {
         web.resumeTimers()
         web.onResume()
         emit("show")
+        if (Live.due(this)) checkForUi(manual = false)
     }
 
     override fun onPause() {
@@ -201,6 +208,19 @@ class MainActivity : ComponentActivity() {
         startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)); true
     } catch (e: Exception) {
         emit("error", "'that screen is not available on this phone'"); false
+    }
+
+    fun requestCalendar() = calendarPermission.launch(Manifest.permission.READ_CALENDAR)
+
+    /** Pulls the latest index.html from the repo. The page reloads itself when it's safe (or right away if asked). */
+    fun checkForUi(manual: Boolean) {
+        if (fetching) return
+        fetching = true
+        Thread {
+            val r = Live.fetch(applicationContext)
+            fetching = false
+            if (manual || r == "updated") emit("updated", "'$r'")
+        }.start()
     }
 
     fun setDarkBarIcons(dark: Boolean) {

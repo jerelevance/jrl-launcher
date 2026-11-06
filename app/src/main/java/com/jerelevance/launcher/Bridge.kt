@@ -1,7 +1,16 @@
 package com.jerelevance.launcher
 
+import android.Manifest
 import android.app.SearchManager
+import android.content.ComponentName
+import android.content.ContentUris
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.media.MediaMetadata
+import android.media.session.MediaController
+import android.media.session.MediaSessionManager
+import android.media.session.PlaybackState
+import android.provider.CalendarContract
 import android.content.pm.ApplicationInfo
 import android.graphics.Rect
 import android.net.Uri
@@ -12,6 +21,7 @@ import android.provider.Settings
 import android.view.HapticFeedbackConstants
 import android.webkit.JavascriptInterface
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -153,4 +163,98 @@ class Bridge(private val act: MainActivity) {
 
     @JavascriptInterface
     fun keyboard() = ui { act.showKeyboard() }
+
+    // ---- calendar: upcoming events from every visible calendar on the phone (read-only) ----
+
+    @JavascriptInterface
+    fun events(days: Int): String {
+        val out = JSONObject()
+        if (ContextCompat.checkSelfPermission(act, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
+            return out.put("perm", false).put("ev", JSONArray()).toString()
+        val arr = JSONArray()
+        val now = System.currentTimeMillis()
+        val uri = CalendarContract.Instances.CONTENT_URI.buildUpon().also {
+            ContentUris.appendId(it, now - 12 * 3600_000L)
+            ContentUris.appendId(it, now + days.coerceIn(1, 31) * 86400_000L)
+        }.build()
+        val proj = arrayOf(
+            CalendarContract.Instances.EVENT_ID, CalendarContract.Instances.TITLE, CalendarContract.Instances.BEGIN,
+            CalendarContract.Instances.END, CalendarContract.Instances.ALL_DAY
+        )
+        try {
+            act.contentResolver.query(uri, proj, CalendarContract.Instances.VISIBLE + "=1", null, CalendarContract.Instances.BEGIN + " ASC")?.use { c ->
+                while (c.moveToNext() && arr.length() < 40) {
+                    val end = c.getLong(3)
+                    if (end <= now) continue
+                    arr.put(JSONObject().put("id", c.getLong(0).toString()).put("title", c.getString(1) ?: "")
+                        .put("begin", c.getLong(2)).put("end", end).put("allDay", c.getInt(4) == 1))
+                }
+            }
+        } catch (_: Exception) {
+        }
+        return out.put("perm", true).put("ev", arr).toString()
+    }
+
+    @JavascriptInterface
+    fun askCalendar() = ui { act.requestCalendar() }
+
+    @JavascriptInterface
+    fun openEvent(id: String, begin: String) = ui {
+        val i = Intent(Intent.ACTION_VIEW, ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id.toLongOrNull() ?: 0L))
+        begin.toDoubleOrNull()?.let { i.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, it.toLong()) }
+        if (!act.start(i)) openCalendar()
+    }
+
+    @JavascriptInterface
+    fun openCalendar() = ui {
+        val sel = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_CALENDAR)
+        if (!act.start(sel)) act.start(Intent(Intent.ACTION_VIEW, CalendarContract.CONTENT_URI.buildUpon().appendPath("time").build()))
+    }
+
+    // ---- now playing: needs the same notification access as the counts ----
+
+    private fun controller(): MediaController? {
+        val msm = act.getSystemService(MediaSessionManager::class.java) ?: return null
+        val list = msm.getActiveSessions(ComponentName(act, NotifListener::class.java))
+        return list.firstOrNull { it.playbackState?.state == PlaybackState.STATE_PLAYING } ?: list.firstOrNull()
+    }
+
+    @JavascriptInterface
+    fun media(): String {
+        val o = JSONObject()
+        val c = (try { controller() } catch (e: SecurityException) { return o.put("on", false).toString() } catch (e: Exception) { null })
+            ?: return o.put("on", true).put("active", false).toString()
+        val md = c.metadata
+        val label = try { pm.getApplicationLabel(pm.getApplicationInfo(c.packageName, 0)).toString() } catch (_: Exception) { c.packageName }
+        return o.put("on", true).put("active", md != null)
+            .put("title", md?.getString(MediaMetadata.METADATA_KEY_TITLE) ?: "")
+            .put("artist", md?.getString(MediaMetadata.METADATA_KEY_ARTIST) ?: md?.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST) ?: "")
+            .put("app", label).put("pkg", c.packageName)
+            .put("playing", c.playbackState?.state == PlaybackState.STATE_PLAYING)
+            .toString()
+    }
+
+    @JavascriptInterface
+    fun mediaCmd(cmd: String) = ui {
+        try {
+            val c = controller() ?: return@ui
+            val t = c.transportControls
+            when (cmd) {
+                "prev" -> t.skipToPrevious()
+                "next" -> t.skipToNext()
+                "play" -> t.play()
+                "pause" -> t.pause()
+                else -> if (c.playbackState?.state == PlaybackState.STATE_PLAYING) t.pause() else t.play()
+            }
+        } catch (_: Exception) {
+        }
+    }
+
+    // ---- over-the-air UI ----
+
+    @JavascriptInterface
+    fun update() = act.checkForUi(manual = true)
+
+    @JavascriptInterface
+    fun version(): Int = try { pm.getPackageInfo(act.packageName, 0).versionCode } catch (_: Exception) { 0 }
 }

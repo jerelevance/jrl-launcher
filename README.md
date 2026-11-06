@@ -27,25 +27,40 @@ your dock, recents and settings.
 
 | Where | Gesture | Does |
 |---|---|---|
-| anywhere | swipe left / right | switch module: **sys ‹ home › apps** (random glitch transition) |
-| home | swipe up, or tap the prompt | terminal (search) |
+| home | swipe up | app drawer with search ready, keyboard up |
 | home | swipe down | notification shade |
-| home | touch the field | the culture dot matrix ripples |
-| any app card | tap / hold | launch / pin, app info, uninstall |
+| anywhere | swipe left / right | switch module: **sys ‹ home › apps** |
+| any app | tap / hold | open / pin to home, put in a folder, move, hide, info, uninstall |
+| home | tap a folder | open it; rename it at the top; Ungroup splits it back out |
+| home | tap the agenda | open that event (or the calendar) |
+| home | now playing | prev / play-pause / next; tap the title to open the player |
+| apps | find bar | filters as you type; Enter opens the top match |
 | apps | drag the A–Z rail | jump by letter |
-| sys | tap a panel header | collapse it |
-| Back | | closes sheet › terminal › returns home |
+| floor | tap the prompt | terminal |
+| Back | | closes sheet › folder › search › terminal › returns home |
 
-**Terminal.** Type and the matches appear above the prompt; Enter opens the top one. Commands:
-`ls`, `open X`, `info X`, `pin X`, `unpin X`, `dock`, `recent`, `uninstall X`, a number (`12` opens app #12),
-`web QUERY`, `url ADDRESS`, `settings wifi|bt|display|sound|battery|launcher|notif|wallpaper`, `shade`,
-`notif`, `battery`, `date`, `uptime`, `go home|apps|sys`, `reboot`, `exit`.
+The calendar asks for permission the first time you tap **Show my calendar**. Now playing and the
+notification badges both need **notification access** (Sys › Notif › Grant access).
 
-`~` escalates to root (there's a login sequence). Root adds: `set fx ripple|scatter|checker|rain|bands|glitch|construct|random`,
-`set decode slow|normal|fast`, `set breathe on|off`, `set boot on|off`, `set icons pixel|app`,
-`field next|N|list` (home palette: blue+lime, pink+mint, deep green+mint, mint+cobalt, acid+red),
-`color lime|red|cyan|white|amber`, `chaos on|off`, `invert on|off`, `neofetch`, `banner`, `hack X`, `rm -rf /`, `logout`.
-There's also a date you know.
+Icons: `set icons app` (real icons, default), `mosaic` (real colours, redrawn as round pixels), `pixel`
+(monochrome halftone). These need root (`~`).
+
+**Terminal.** Type and matches appear; Enter opens the top one. `ls`, `open X`, `pin X`, `unpin X`, `home`,
+`hide X`, `unhide X`, `hidden`, `recent`, `uninstall X`, a number, `web QUERY`, `url ADDRESS`,
+`settings wifi|bt|display|sound|battery|launcher|notif|wallpaper`, `shade`, `notif`, `battery`, `update`,
+`version`, `reboot`, `exit`. `~` escalates to root: `set fx|decode|breathe|boot always|smart|off|icons`, `field`,
+`color`, `chaos`, `invert`, `neofetch`, `hack`, `rm -rf /`, `logout`.
+
+The boot sequence plays after a phone restart or a UI update (`set boot always|smart|off`).
+
+## Updating without reinstalling
+
+The UI is one file, `app/src/main/assets/www/index.html`. The installed app checks this repo's `main`
+branch for a newer copy every 30 minutes (when you come back to home) and applies it the next time you
+leave home. Type `update` in the terminal to pull and apply right away.
+
+Only changes to the Kotlin side (new phone permissions, new bridge methods) need a new APK from Releases.
+Installing a new APK always resets to the page bundled inside it.
 
 ## Editing the look
 
