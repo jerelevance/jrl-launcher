@@ -28,7 +28,7 @@ jobs:
             **jere** (`jrl-…`): the full JERE//LEVANCE treatment. Giant word, JRL//01 label, boot screen.
             **no-jere** (`nojere-…`): same designs, no name anywhere. Ripples on their own, FIELD in the glitch loop, the culture glyph breathing.
 
-            **marathon** (`marathon-…`): the Marathon colour generator from jerelevance, 15 s loops.
+            **marathon** (`marathon-…`, `redwhite-…`, `marathon-theme-…`): the Marathon colour generator from jerelevance. Site colours, red & white, and the launcher's marathon theme. 15 s loops.
 
             **Loops** (12 s, seamless): `field`, `glitch`, `breathe`. **Stills:** one per launcher theme.
             **Folders as zips:** `jrl-jere.zip`, `jrl-no-jere.zip`, or both in `jrl-wallpapers.zip`.
