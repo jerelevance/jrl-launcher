@@ -1,0 +1,53 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # to publish the APK as a release you can download on the phone
+
+concurrency:
+  group: apk
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+
+      - name: Bundle fonts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/fetch-fonts.sh
+
+      - name: Build
+        run: gradle --no-daemon assembleRelease
+
+      - name: Name the APK
+        run: cp app/build/outputs/apk/release/app-release.apk jrl-launcher.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jrl-launcher
+          path: jrl-launcher.apk
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: JRL launcher build ${{ github.run_number }}
+          body: "Open this page on the phone and tap jrl-launcher.apk to install."
+          files: jrl-launcher.apk
+          make_latest: true

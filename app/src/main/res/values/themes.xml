@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="field">#FF1722F6</color>
+    <color name="lime">#FFC5FF18</color>
+
+    <style name="Theme.JRL" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/field</item>
+        <item name="android:colorBackground">@color/field</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowShowWallpaper">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+</resources>
