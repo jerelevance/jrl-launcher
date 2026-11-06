@@ -13,7 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: zip -q jrl-wallpapers.zip *.mp4 *.png
+      - run: |
+          zip -qr jrl-wallpapers.zip jere no-jere
+          (cd jere && zip -q ../jrl-jere.zip *)
+          (cd no-jere && zip -q ../jrl-no-jere.zip *)
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: wallpapers-v1
@@ -22,12 +25,16 @@ jobs:
           body: |
             Lock-screen loops and stills for the Galaxy Z Fold7. Files ending in **-cover** fit the outside screen (1080×2520); **-inner** fits the unfolded screen (1968×2184).
 
-            **Loops** (12 s, seamless): `jrl-field`, `jrl-glitch`, `jrl-breathe`
-            **Stills:** one per launcher theme, plus `jrl-boot`
-            **Everything at once:** `jrl-wallpapers.zip`
+            **jere** (`jrl-…`): the full JERE//LEVANCE treatment. Giant word, JRL//01 label, boot screen.
+            **no-jere** (`nojere-…`): same designs, no name anywhere. Ripples on their own, FIELD in the glitch loop, the culture glyph breathing.
+
+            **Loops** (12 s, seamless): `field`, `glitch`, `breathe`. **Stills:** one per launcher theme.
+            **Folders as zips:** `jrl-jere.zip`, `jrl-no-jere.zip`, or both in `jrl-wallpapers.zip`.
 
             Set: tap a file › download › Gallery › ⋮ › *Set as wallpaper* › *Lock screen*. Use the cover version folded and the inner version unfolded.
           files: |
-            *.mp4
-            *.png
+            jere/*
+            no-jere/*
             jrl-wallpapers.zip
+            jrl-jere.zip
+            jrl-no-jere.zip

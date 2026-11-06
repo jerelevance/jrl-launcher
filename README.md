@@ -1,6 +1,7 @@
 # Wallpapers
 
 Lock-screen loops and stills for the Galaxy Z Fold7, drawn with the same code as the launcher.
+Two folders: **`jere/`** has the full JERE//LEVANCE treatment; **`no-jere/`** has the same designs with no name anywhere.
 Download them from [Releases › wallpapers](https://github.com/jerelevance/jrl-launcher/releases/tag/wallpapers-v1).
 
 | | cover (1080×2520) | inner (1968×2184) |
