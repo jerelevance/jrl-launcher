@@ -1220,16 +1220,16 @@ function renderPager() {
 /* the root-terminal flash: a white band in difference blend, from a random side at a random angle */
 function sweep() {
   if (reduce) return;
-  var r = srect(), el = document.createElement('div'), D = Math.hypot(r.width, r.height);
-  var ang = Math.random() * 360, band = D * (.35 + Math.random() * .25);
-  el.style.cssText = 'position:fixed;z-index:45;pointer-events:none;mix-blend-mode:difference;left:' + (r.left + r.width / 2 - D) + 'px;top:' + (r.top + r.height / 2 - D) + 'px;width:' + (D * 2) + 'px;height:' + (D * 2) + 'px;transform:rotate(' + ang + 'deg)';
-  var bar = document.createElement('div');
-  bar.style.cssText = 'position:absolute;top:0;bottom:0;left:0;width:' + band + 'px;background:linear-gradient(90deg,transparent 0%,#fff 30%,#fff 70%,transparent 100%)';
-  el.appendChild(bar); var clip = document.createElement('div'); clip.style.cssText = 'position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:45;clip-path:inset(' + r.top + 'px ' + (innerWidth - r.right) + 'px ' + (innerHeight - r.bottom) + 'px ' + r.left + 'px)';
-  clip.appendChild(el); document.body.appendChild(clip);
-  var from = D * .5 - band, to = D * 1.5;
-  bar.animate([{ transform: 'translateX(' + from + 'px)', opacity: 0 }, { opacity: 1, offset: .25 }, { opacity: 1, offset: .75 }, { transform: 'translateX(' + to + 'px)', opacity: 0 }], { duration: 1300, easing: 'ease-in-out' })
-    .onfinish = function () { clip.remove(); };
+  /* white band in difference blend = colour invert. the blended element sits straight on <body> so nothing isolates it */
+  var r = srect(), D = Math.hypot(r.width, r.height), ang = Math.random() * 360, band = D * (.3 + Math.random() * .2);
+  var el = document.createElement('div');
+  el.style.cssText = 'position:fixed;z-index:45;pointer-events:none;mix-blend-mode:difference;top:' + (r.top + r.height / 2 - D) + 'px;left:' + (r.left + r.width / 2 - D) + 'px;width:' + (D * 2) + 'px;height:' + (D * 2) + 'px;' +
+    'background:linear-gradient(90deg,transparent 0%,#fff 30%,#fff 70%,transparent 100%) 0 0/' + band + 'px 100% no-repeat;transform:rotate(' + ang + 'deg)';
+  document.body.appendChild(el);
+  var rad = ang * Math.PI / 180, proj = Math.abs(r.width * Math.cos(rad)) + Math.abs(r.height * Math.sin(rad));   // screen's extent along the sweep
+  var from = D - proj / 2 - band, to = D + proj / 2;
+  el.animate([{ backgroundPosition: from + 'px 0', opacity: .6 }, { opacity: 1, offset: .12 }, { opacity: 1, offset: .88 }, { backgroundPosition: to + 'px 0', opacity: .6 }], { duration: 2400, easing: 'cubic-bezier(.4,0,.6,1)' })
+    .onfinish = function () { el.remove(); };
   log('fx // sweep ' + Math.round(ang) + '°');
 }
 function modName() { return current === 'home' ? META.home.name + pad(SET.pal + 1) : META[current].name; }
