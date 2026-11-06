@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          zip -qr jrl-wallpapers.zip jere no-jere
+          zip -qr jrl-wallpapers.zip jere no-jere marathon
           (cd jere && zip -q ../jrl-jere.zip *)
           (cd no-jere && zip -q ../jrl-no-jere.zip *)
       - uses: softprops/action-gh-release@v2
@@ -28,6 +28,8 @@ jobs:
             **jere** (`jrl-…`): the full JERE//LEVANCE treatment. Giant word, JRL//01 label, boot screen.
             **no-jere** (`nojere-…`): same designs, no name anywhere. Ripples on their own, FIELD in the glitch loop, the culture glyph breathing.
 
+            **marathon** (`marathon-…`): the Marathon colour generator from jerelevance, 15 s loops.
+
             **Loops** (12 s, seamless): `field`, `glitch`, `breathe`. **Stills:** one per launcher theme.
             **Folders as zips:** `jrl-jere.zip`, `jrl-no-jere.zip`, or both in `jrl-wallpapers.zip`.
 
@@ -35,6 +37,7 @@ jobs:
           files: |
             jere/*
             no-jere/*
+            marathon/*
             jrl-wallpapers.zip
             jrl-jere.zip
             jrl-no-jere.zip
